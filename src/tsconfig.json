@@ -12,7 +12,7 @@
 	},
 	"tstl": {
 		"luaTarget": "JIT",
-		"luaBundle": "control.lua",
-		"luaBundleEntry": "src/control.ts"
+		"luaBundle": "../control.lua",
+		"luaBundleEntry": "control.ts"
 	}
 }

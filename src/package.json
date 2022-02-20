@@ -1,6 +1,7 @@
 {
 	"private": true,
 	"scripts": {
+		"setup project": "npm i",
 		"build": "tstl",
 		"dev": "tstl --watch"
 	},

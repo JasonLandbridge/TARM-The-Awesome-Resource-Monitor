@@ -1,5 +1,19 @@
-import PlayerData from './player-data';
+declare let globalData: Global;
 
-export default class Global {
-	public playerData: PlayerData = {};
+export interface Global {
+	playerData: PlayerData[];
+	forceData: ForceData[];
+}
+
+export interface PlayerData {
+	index: number;
+	guiUpdateTicks: number;
+}
+export interface ForceData {
+	name: string;
+	resourceSites: ResourceSites[];
+}
+
+export interface ResourceSites {
+	name: string;
 }

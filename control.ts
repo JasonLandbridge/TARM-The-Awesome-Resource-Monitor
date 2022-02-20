@@ -4,10 +4,18 @@ import { toggleInterface } from './gui/main-hud';
 import { Entity } from './constants';
 import { setup_gvv } from './debug';
 import { setupGlobalData } from './lib/global-data';
+import { initPlayer } from './data/player-data';
 
 setup_gvv();
 
-setupGlobalData()
+// if (script.active_mods['gvv']) {
+// 	/** @NoResolution **/
+// 	let modString = '__gvv__.gvv';
+// 	require(modString);
+// }
+script.on_init(() => {
+	setupGlobalData();
+});
 
 script.on_event(defines.events.on_gui_closed, (event: OnGuiClosedEvent) => {
 	if (event.element && event.element.name === HUD.MainFrame) {
@@ -29,4 +37,8 @@ script.on_event(defines.events.on_player_selected_area, (event: OnPlayerSelected
 	if (event.item !== Entity.SelectorTool) {
 		return;
 	}
+});
+
+script.on_event(defines.events.on_player_created, (event: OnPlayerCreatedEvent) => {
+	initPlayer(event.player_index);
 });

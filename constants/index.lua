@@ -1,4 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 7,["16"] = 7,["17"] = 7,["18"] = 7,["19"] = 7});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default

@@ -1,4 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 9,["20"] = 16,["21"] = 17,["22"] = 16,["23"] = 20,["24"] = 20,["25"] = 20,["26"] = 21,["27"] = 22,["28"] = 23,["29"] = 24,["32"] = 20,["33"] = 20,["34"] = 29,["35"] = 29,["36"] = 29,["37"] = 30,["38"] = 31,["39"] = 32,["41"] = 29,["42"] = 29,["43"] = 36,["44"] = 36,["45"] = 36,["46"] = 37,["49"] = 36,["50"] = 36,["51"] = 42,["52"] = 42,["53"] = 42,["54"] = 43,["55"] = 42,["56"] = 42});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -12,8 +14,12 @@ local ____debug = require("debug")
 local setup_gvv = ____debug.setup_gvv
 local ____global_2Ddata = require("lib.global-data")
 local setupGlobalData = ____global_2Ddata.setupGlobalData
+local ____player_2Ddata = require("data.player-data")
+local initPlayer = ____player_2Ddata.initPlayer
 setup_gvv(nil)
-setupGlobalData(nil)
+script.on_init(function()
+    setupGlobalData(nil)
+end)
 script.on_event(
     defines.events.on_gui_closed,
     function(event)
@@ -40,6 +46,12 @@ script.on_event(
         if event.item ~= Entity.SelectorTool then
             return
         end
+    end
+)
+script.on_event(
+    defines.events.on_player_created,
+    function(event)
+        initPlayer(nil, event.player_index)
     end
 )
 return ____exports

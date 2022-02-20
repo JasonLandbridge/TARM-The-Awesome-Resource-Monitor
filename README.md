@@ -1,1 +1,1 @@
-TARM-The-Awesome-Resource-Monitor
+TARM - The Awesome Resource Manager

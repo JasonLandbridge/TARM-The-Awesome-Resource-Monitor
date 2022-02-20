@@ -1,0 +1,23 @@
+{
+	"name": "TARM-The-Awesome-Resource-Monitor",
+	"version": "0.0.1",
+	"title": "TARM - The Awesome Resource Monitor (YARM V2)",
+	"author": "Xiomax",
+	"contact": "https://github.com/JasonLandbridge/TARM-The-Awesome-Resource-Monitor/issues",
+	"homepage": "",
+	"factorio_version": "1.1",
+	"dependencies": [
+		"stdlib > 0.4.3",
+		"flib >= 0.7.0"
+	],
+	"description": "",
+	"package": {
+		"ignore": [
+			"**/*.psd",
+			"**/.zip",
+			".git",
+			".gitignore",
+			".vscode"
+		]
+	}
+}

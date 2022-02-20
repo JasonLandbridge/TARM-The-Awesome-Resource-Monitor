@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"lib": [
+			"esnext"
+		],
+		"moduleResolution": "node",
+		"types": [
+			"typed-factorio/runtime"
+		],
+		"strict": true
+	},
+	"tstl": {
+		"luaTarget": "JIT",
+		"luaBundle": "control.lua",
+		"luaBundleEntry": "src/control.ts"
+	}
+}

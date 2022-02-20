@@ -19,5 +19,12 @@ export function buildInterface(player: LuaPlayer) {
 	main_frame.style.size = [385, 165];
 	main_frame.auto_center = true;
 
+	// Add scroll-pane
+	main_frame.add({
+		type: 'scroll-pane',
+		name: HUD.MainScrollFrame,
+		vertical_scroll_policy: 'auto-and-reserve-space',
+	});
+
 	player.opened = main_frame;
 }

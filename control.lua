@@ -7,12 +7,6 @@ local Events = ____events.default
 local ____main_2Dhud = require("gui.main-hud")
 local toggleInterface = ____main_2Dhud.toggleInterface
 script.on_event(
-    defines.events.on_tick,
-    function(_evt)
-        game.print(serpent.block({hello = "world", its_nice = "to see you"}))
-    end
-)
-script.on_event(
     defines.events.on_gui_closed,
     function(event)
         if event.element and event.element.name == HUD.MainFrame then

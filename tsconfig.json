@@ -1,18 +1,22 @@
 {
 	"compilerOptions": {
 		"target": "esnext",
-		"lib": [
-			"esnext"
-		],
+		"lib": ["esnext"],
 		"moduleResolution": "node",
-		"types": [
-			"typed-factorio/runtime"
-		],
-		"strict": true
+		"types": ["typed-factorio/runtime"],
+		"strict": true,
+		"baseUrl": "./"
+		// Path aliases don't seem to work in TypeScriptToLua
+		// "paths": {
+		// 	"@const": ["./constants/index.ts"],
+		// 	"@const/*": ["./constants/*"]
+		// }
 	},
 	"tstl": {
 		"luaTarget": "JIT",
+		// Breaks the loading of the Factorio map when using "luaBundle"
+		//"luaBundle": "control.lua",
 		"luaBundleEntry": "control.ts",
-		"buildMode": "default",
+		"buildMode": "default"
 	}
 }

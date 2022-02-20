@@ -12,6 +12,7 @@ function ____exports.buildInterface(self, player)
     local main_frame = screen_element.add({type = "frame", name = HUD.MainFrame, caption = General.Prefix .. ".hello_world"})
     main_frame.style.size = {385, 165}
     main_frame.auto_center = true
+    main_frame.add({type = "scroll-pane", name = HUD.MainScrollFrame, vertical_scroll_policy = "auto-and-reserve-space"})
     player.opened = main_frame
 end
 function ____exports.toggleInterface(self, player)

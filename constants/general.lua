@@ -7,5 +7,6 @@ General.name = "General"
 function General.prototype.____constructor(self)
 end
 General.Prefix = "TERM"
+General.ModName = "TARM-The-Awesome-Resource-Monitor"
 ____exports.default = General
 return ____exports

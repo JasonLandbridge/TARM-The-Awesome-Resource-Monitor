@@ -28,7 +28,7 @@ function ____exports.initPlayer(self, playerIndex)
     end
     ____exports.initForce(nil, player.force)
     if not ____exports.getPlayerData(nil, playerIndex) then
-        __TS__ArrayPush(GlobalData.playerData, {index = playerIndex, guiUpdateTicks = 60})
+        __TS__ArrayPush(GlobalData.playerData, {overlays = nil, index = playerIndex, guiUpdateTicks = 60, currentSite = nil})
     end
 end
 return ____exports

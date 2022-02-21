@@ -7,6 +7,11 @@ import { PlayerData } from '../declarations/global';
 import SettingsData from '../data/settings-data';
 import { Entity } from '../constants';
 
+/**
+ *
+ * Note: `resmon.submit_site(player_index)`
+ * @param playerIndex
+ */
 export function createResourceSite(playerIndex: number) {
 	let player = getPlayer(playerIndex);
 	let playerData = getPlayerData(playerIndex);
@@ -28,11 +33,19 @@ export function createResourceSite(playerIndex: number) {
 		if (resourceSite.hasExpanded) {
 			resourceSite.lastOreCheck = undefined;
 			resourceSite.lastModifiedAmount = undefined;
-			let amountAdded = resourceSite.amount - resourceSite.originalAmount;
+			let amountAdded = resourceSite.amount - (resourceSite.originalAmount ?? 0);
 			Log.info(playerIndex, `TARM Site expanded - ${resourceSite.name} - ${amountAdded}`);
 		}
 	} else {
 		Log.info(playerIndex, `TARM site submitted - ${resourceSite.name}`);
+	}
+
+	// TODO add `resmon.update_chart_tag(site)`
+
+	if (resourceSite.isSiteExpanding) {
+		resourceSite.isSiteExpanding = undefined;
+		resourceSite.hasExpanded = undefined;
+		resourceSite.originalAmount = undefined;
 	}
 }
 

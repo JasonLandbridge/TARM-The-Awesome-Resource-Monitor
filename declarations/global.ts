@@ -34,11 +34,11 @@ export interface TrackingData {
 
 export interface ResourceSite {
 	name: string;
-	isSiteExpanding: boolean;
-	hasExpanded: boolean;
+	isSiteExpanding?: boolean;
+	hasExpanded?: boolean;
 	amount: number;
 	initialAmount: number;
-	originalAmount: number;
+	originalAmount?: number;
 	oreType: string;
 	oreName: LocalisedString;
 	finalizing: boolean;

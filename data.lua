@@ -58,7 +58,7 @@ data:extend({
     },
     {
         type = "container",
-        name = General.Prefix .. "_rm_overlay",
+        name = Entity.ResourceManagerOverlay,
         flags = {"placeable-neutral", "player-creation", "not-repairable"},
         icon = Paths:Graphics("rm_Overlay.png"),
         icon_size = 32,

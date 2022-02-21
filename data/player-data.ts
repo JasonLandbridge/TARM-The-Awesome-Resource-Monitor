@@ -8,7 +8,7 @@ export function initPlayer(playerIndex: number): void {
 	}
 	initForce(player.force);
 	if (!getPlayerData(playerIndex)) {
-		GlobalData.playerData.push({ overlays: undefined, index: playerIndex, guiUpdateTicks: 60, currentSite: undefined });
+		GlobalData.playerData.push({ overlays: [], index: playerIndex, guiUpdateTicks: 60, currentSite: undefined });
 	}
 }
 

@@ -10,7 +10,10 @@ export interface PlayerData {
 	index: number;
 	guiUpdateTicks: number;
 	currentSite: ResourceSite | undefined;
-	overlays: any;
+	/**
+	 * The (dark blue) overlay entities when a resource site is selected or "crawled" when searching for all ore.
+	 */
+	overlays: LuaEntity[];
 }
 export interface ForceData {
 	name: string;

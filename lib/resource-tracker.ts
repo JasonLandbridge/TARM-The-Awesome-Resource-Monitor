@@ -3,6 +3,9 @@ import { getPlayerData } from '../data/player-data';
 import { addResourceSiteToForce, getForceData } from '../data/force-data';
 import Log from './log';
 import { addEntity } from './resource-cache';
+import { PlayerData } from '../declarations/global';
+import SettingsData from '../data/settings-data';
+import { Entity } from '../constants';
 
 export function createResourceSite(playerIndex: number) {
 	let player = getPlayer(playerIndex);
@@ -43,10 +46,9 @@ export function clearCurrentSite(playerIndex: number) {
 
 	playerData.currentSite = undefined;
 
-	while (playerData.overlays > 0) {
-		// TODO need to determine what this means
-		// table.remove(player_data.overlays).destroy()
-		Log.debug(playerIndex, String(playerData.overlays));
+	// Clean-up the overlay created on ores after it has been crawled
+	while (playerData.overlays.length > 0) {
+		playerData.overlays.pop()?.destroy();
 	}
 }
 
@@ -146,7 +148,29 @@ export function addSingleEntity(playerIndex: number, entity: LuaEntity) {
 		resourceSite.extends.bottom = entity.position.y;
 	}
 
-	// TODO Add Marker
-	// -- Give visible feedback, too
-	// resmon.put_marker_at(entity.surface, entity.position, player_data)
+	// Show blue overlay of resources selected
+	addOverlayOnResource(entity, playerData);
+}
+
+export function addOverlayOnResource(entity: LuaEntity, playerData: PlayerData) {
+	let pos = entity.position;
+	let surface = entity.surface;
+
+	if (Math.floor(pos.x) % SettingsData.OverlayStep !== 0 || Math.floor(pos.y) % SettingsData.OverlayStep !== 0) {
+		return;
+	}
+
+	let overlay = surface.create_entity({ name: Entity.ResourceManagerOverlay, force: game.forces.neutral, position: pos });
+	if (!overlay) {
+		Log.error(
+			playerData.index,
+			`addOverlayOnResource() => Could not create resource overlay on position x: ${pos.x}, y: ${pos.y}`,
+		);
+		return;
+	}
+	overlay.minable = false;
+	overlay.destructible = false;
+	overlay.operable = false;
+
+	playerData.overlays.push(overlay);
 }

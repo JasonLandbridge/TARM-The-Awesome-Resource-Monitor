@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 3,["12"] = 4,["13"] = 4,["14"] = 5,["15"] = 5,["16"] = 36,["17"] = 37,["18"] = 38,["19"] = 40,["22"] = 44,["23"] = 46,["24"] = 49,["25"] = 49,["26"] = 49,["27"] = 49,["29"] = 36,["30"] = 110,["31"] = 111,["32"] = 112,["35"] = 115,["36"] = 116,["37"] = 117,["40"] = 120,["41"] = 122,["44"] = 126,["45"] = 127,["47"] = 131,["48"] = 132,["49"] = 133,["50"] = 134,["51"] = 137,["52"] = 138,["53"] = 139,["54"] = 140,["56"] = 143,["57"] = 144,["58"] = 145,["59"] = 146,["61"] = 110,["62"] = 7,["63"] = 8,["64"] = 9,["65"] = 10,["68"] = 13,["69"] = 14,["70"] = 16,["71"] = 17,["72"] = 17,["73"] = 17,["74"] = 17,["77"] = 21,["78"] = 21,["79"] = 21,["80"] = 21,["82"] = 21,["83"] = 22,["84"] = 24,["85"] = 25,["86"] = 26,["87"] = 27,["88"] = 28,["89"] = 29,["90"] = 29,["91"] = 29,["92"] = 29,["95"] = 32,["97"] = 7,["98"] = 53,["99"] = 54,["100"] = 55,["101"] = 57,["104"] = 61,["105"] = 62,["106"] = 63,["108"] = 65,["111"] = 69,["112"] = 70,["113"] = 70,["114"] = 70,["115"] = 70,["116"] = 70,["117"] = 70,["118"] = 70,["119"] = 70,["120"] = 70,["121"] = 70,["122"] = 70,["123"] = 70,["124"] = 70,["125"] = 70,["126"] = 70,["127"] = 70,["128"] = 70,["129"] = 70,["130"] = 70,["131"] = 70,["132"] = 70,["133"] = 70,["134"] = 70,["136"] = 100,["137"] = 102,["138"] = 103,["139"] = 104,["142"] = 107,["143"] = 53});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 3,["12"] = 4,["13"] = 4,["14"] = 5,["15"] = 5,["16"] = 7,["17"] = 7,["18"] = 8,["19"] = 8,["20"] = 39,["21"] = 40,["22"] = 41,["23"] = 43,["26"] = 47,["27"] = 50,["28"] = 51,["29"] = 51,["30"] = 51,["33"] = 39,["34"] = 112,["35"] = 113,["36"] = 114,["39"] = 117,["40"] = 118,["41"] = 119,["44"] = 122,["45"] = 124,["48"] = 128,["49"] = 129,["51"] = 133,["52"] = 134,["53"] = 135,["54"] = 136,["55"] = 139,["56"] = 140,["57"] = 141,["58"] = 142,["60"] = 145,["61"] = 146,["62"] = 147,["63"] = 148,["65"] = 152,["66"] = 112,["67"] = 155,["68"] = 156,["69"] = 157,["70"] = 159,["73"] = 163,["74"] = 164,["75"] = 165,["76"] = 165,["77"] = 165,["78"] = 165,["81"] = 171,["82"] = 172,["83"] = 173,["84"] = 175,["85"] = 155,["86"] = 10,["87"] = 11,["88"] = 12,["89"] = 13,["92"] = 16,["93"] = 17,["94"] = 19,["95"] = 20,["96"] = 20,["97"] = 20,["98"] = 20,["101"] = 24,["102"] = 24,["103"] = 24,["104"] = 24,["106"] = 24,["107"] = 25,["108"] = 27,["109"] = 28,["110"] = 29,["111"] = 30,["112"] = 31,["113"] = 32,["114"] = 32,["115"] = 32,["116"] = 32,["119"] = 35,["121"] = 10,["122"] = 55,["123"] = 56,["124"] = 57,["125"] = 59,["128"] = 63,["129"] = 64,["130"] = 65,["132"] = 67,["135"] = 71,["136"] = 72,["137"] = 72,["138"] = 72,["139"] = 72,["140"] = 72,["141"] = 72,["142"] = 72,["143"] = 72,["144"] = 72,["145"] = 72,["146"] = 72,["147"] = 72,["148"] = 72,["149"] = 72,["150"] = 72,["151"] = 72,["152"] = 72,["153"] = 72,["154"] = 72,["155"] = 72,["156"] = 72,["157"] = 72,["158"] = 72,["160"] = 102,["161"] = 104,["162"] = 105,["163"] = 106,["166"] = 109,["167"] = 55});
 local ____exports = {}
 local ____game = require("lib.game")
 local getPlayer = ____game.getPlayer
@@ -13,6 +13,10 @@ local ____log = require("lib.log")
 local Log = ____log.default
 local ____resource_2Dcache = require("lib.resource-cache")
 local addEntity = ____resource_2Dcache.addEntity
+local ____settings_2Ddata = require("data.settings-data")
+local SettingsData = ____settings_2Ddata.default
+local ____constants = require("constants.index")
+local Entity = ____constants.Entity
 function ____exports.clearCurrentSite(self, playerIndex)
     local player = getPlayer(nil, playerIndex)
     local playerData = getPlayerData(nil, playerIndex)
@@ -20,11 +24,11 @@ function ____exports.clearCurrentSite(self, playerIndex)
         return
     end
     playerData.currentSite = nil
-    while playerData.overlays > 0 do
-        Log:debug(
-            playerIndex,
-            String(nil, playerData.overlays)
-        )
+    while #playerData.overlays > 0 do
+        local ____playerData_overlays_pop_result_destroy_result_3 = table.remove(playerData.overlays)
+        if ____playerData_overlays_pop_result_destroy_result_3 ~= nil then
+            ____playerData_overlays_pop_result_destroy_result_3 = ____playerData_overlays_pop_result_destroy_result_3.destroy()
+        end
     end
 end
 function ____exports.addSingleEntity(self, playerIndex, entity)
@@ -58,6 +62,26 @@ function ____exports.addSingleEntity(self, playerIndex, entity)
     elseif entity.position.x > resourceSite.extends.bottom then
         resourceSite.extends.bottom = entity.position.y
     end
+    ____exports.addOverlayOnResource(nil, entity, playerData)
+end
+function ____exports.addOverlayOnResource(self, entity, playerData)
+    local pos = entity.position
+    local surface = entity.surface
+    if math.floor(pos.x) % SettingsData.OverlayStep ~= 0 or math.floor(pos.y) % SettingsData.OverlayStep ~= 0 then
+        return
+    end
+    local overlay = surface.create_entity({name = Entity.ResourceManagerOverlay, force = game.forces.neutral, position = pos})
+    if not overlay then
+        Log:error(
+            playerData.index,
+            (("addOverlayOnResource() => Could not create resource overlay on position x: " .. tostring(pos.x)) .. ", y: ") .. tostring(pos.y)
+        )
+        return
+    end
+    overlay.minable = false
+    overlay.destructible = false
+    overlay.operable = false
+    __TS__ArrayPush(playerData.overlays, overlay)
 end
 function ____exports.createResourceSite(self, playerIndex)
     local player = getPlayer(nil, playerIndex)

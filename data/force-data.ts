@@ -1,7 +1,7 @@
 import { ForceData, ResourceSite } from '../declarations/global';
 
 export function getForceData(forceName: string): ForceData | undefined {
-	return GlobalData.forceData.find((x) => x.name === forceName);
+	return GlobalData.forceData[forceName];
 }
 
 export function addResourceSiteToForce(forceName: string, site: ResourceSite) {
@@ -10,3 +10,4 @@ export function addResourceSiteToForce(forceName: string, site: ResourceSite) {
 		forceData.resourceSites.push(site);
 	}
 }
+

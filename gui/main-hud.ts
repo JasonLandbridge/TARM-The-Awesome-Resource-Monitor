@@ -1,5 +1,7 @@
 import HUD from '../constants/hud';
 import General from '../constants/general';
+import { getPlayer } from '../lib/game';
+import { getForceData } from '../data/force-data';
 
 export function toggleInterface(player: LuaPlayer) {
 	let main_frame = player.gui.screen[HUD.MainFrame] as LuaGuiElement;
@@ -101,4 +103,28 @@ export function buildInterface(player: LuaPlayer) {
 
 	// Set to player
 	player.opened = main_frame;
+	updateHud(player.index, zoneListScroll);
+}
+
+export function updateHud(playerIndex: number, parent: LuaGuiElement) {
+	let player = getPlayer(playerIndex);
+	if (!(player && player.connected)) {
+		return;
+	}
+
+	let window = player.gui.screen[HUD.MainFrame];
+
+	let forceData = getForceData(player.force.name);
+	if (!forceData) {
+		return;
+	}
+
+	for (const resourceSite of forceData.resourceSites) {
+		// Create row flow
+		let row = parent.add({ type: 'button', name: resourceSite.name }); // style: (zone == playerdata.zonelist_selected_zone and "zonelist_row_button_selected" or "zonelist_row_button")}
+		let row_flow = row.add({ type: 'flow', name: 'row_flow', direction: 'horizontal', ignored_by_interaction: true });
+
+		row_flow.add({ type: 'label', name: 'cell_name', caption: resourceSite.name, style: 'se_zonelist_cell_name' });
+		row_flow.add({ type: 'label', name: 'cell_type', caption: resourceSite.amount, style: 'se_zonelist_cell_type' });
+	}
 }

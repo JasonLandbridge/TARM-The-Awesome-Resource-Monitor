@@ -2,7 +2,7 @@ declare let globalData: Global;
 
 export interface Global {
 	playerData: PlayerData[];
-	forceData: ForceData[];
+	forceData: { [name: string]: ForceData };
 	resourceTracker: ResourceTracker;
 }
 
@@ -15,8 +15,8 @@ export interface PlayerData {
 	 */
 	overlays: LuaEntity[];
 }
+
 export interface ForceData {
-	name: string;
 	resourceSites: ResourceSite[];
 }
 
@@ -41,7 +41,12 @@ export interface ResourceSite {
 	originalAmount?: number;
 	oreType: string;
 	oreName: LocalisedString;
+	orePerMinute: number;
 	finalizing: boolean;
+	/**
+	 * The game tick it has since been finalized on
+	 */
+	finalizingSince: number;
 	lastOreCheck: number | undefined;
 	lastModifiedAmount: number | undefined;
 	addedAt: number;
@@ -49,12 +54,16 @@ export interface ResourceSite {
 	force: LuaForce;
 	trackerIndices: any[];
 	entityCount: number;
-	extends: Extend;
-	nextToScan: any[];
+	extents: Extend;
+	nextToScan: LuaEntity[];
 	entitiesToBeOverlaid: any;
 	nextToOverlay: any;
 	// used for ETD easing; initialized when needed,
 	etdMinutes: number;
+	remainingPerMille: number;
+	center: PositionArray;
+	iterating?: Iteration;
+	isOverlayBeingCreated: boolean;
 }
 
 export interface Extend {
@@ -62,4 +71,9 @@ export interface Extend {
 	right: number;
 	top: number;
 	bottom: number;
+}
+
+export interface Iteration {
+	running: boolean;
+	state: boolean[]
 }

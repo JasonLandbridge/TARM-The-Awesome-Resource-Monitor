@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 7,["20"] = 8,["21"] = 8,["22"] = 8,["23"] = 8,["24"] = 10,["25"] = 12,["26"] = 13,["27"] = 12,["28"] = 16,["29"] = 16,["30"] = 16,["31"] = 17,["32"] = 18,["33"] = 19,["34"] = 20,["37"] = 16,["38"] = 16,["39"] = 25,["40"] = 25,["41"] = 25,["42"] = 26,["43"] = 27,["44"] = 28,["46"] = 25,["47"] = 25,["48"] = 32,["49"] = 32,["50"] = 32,["51"] = 33,["54"] = 37,["55"] = 38,["58"] = 41,["59"] = 43,["60"] = 44,["62"] = 46,["65"] = 50,["66"] = 51,["67"] = 52,["70"] = 32,["71"] = 32,["72"] = 57,["73"] = 57,["74"] = 57,["75"] = 58,["76"] = 57,["77"] = 57});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 7,["20"] = 8,["21"] = 8,["22"] = 8,["23"] = 8,["24"] = 8,["25"] = 10,["26"] = 12,["27"] = 13,["28"] = 12,["29"] = 16,["30"] = 16,["31"] = 16,["32"] = 17,["33"] = 16,["34"] = 16,["35"] = 20,["36"] = 20,["37"] = 20,["38"] = 21,["39"] = 22,["40"] = 23,["41"] = 24,["44"] = 20,["45"] = 20,["46"] = 29,["47"] = 29,["48"] = 29,["49"] = 30,["50"] = 31,["51"] = 32,["53"] = 29,["54"] = 29,["55"] = 36,["56"] = 36,["57"] = 36,["58"] = 37,["61"] = 41,["62"] = 42,["65"] = 45,["66"] = 47,["67"] = 48,["69"] = 50,["72"] = 54,["73"] = 55,["74"] = 56,["77"] = 36,["78"] = 36,["79"] = 61,["80"] = 61,["81"] = 61,["82"] = 62,["83"] = 61,["84"] = 61});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -12,7 +12,7 @@ local ____constants = require("constants.index")
 local Entity = ____constants.Entity
 local ____debug = require("lib.debug")
 local setup_gvv = ____debug.setup_gvv
-local ____global_2Ddata = require("lib.global-data")
+local ____global_2Ddata = require("data.global-data")
 local setupGlobalData = ____global_2Ddata.setupGlobalData
 local ____player_2Ddata = require("data.player-data")
 local getPlayerData = ____player_2Ddata.getPlayerData
@@ -21,10 +21,17 @@ local ____resource_2Dtracker = require("lib.resource-tracker")
 local addResource = ____resource_2Dtracker.addResource
 local clearCurrentSite = ____resource_2Dtracker.clearCurrentSite
 local createResourceSite = ____resource_2Dtracker.createResourceSite
+local updatePlayers = ____resource_2Dtracker.updatePlayers
 setup_gvv(nil)
 script.on_init(function()
     setupGlobalData(nil)
 end)
+script.on_event(
+    defines.events.on_tick,
+    function(event)
+        updatePlayers(nil, event)
+    end
+)
 script.on_event(
     defines.events.on_gui_closed,
     function(event)

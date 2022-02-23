@@ -1,5 +1,6 @@
 import { getPlayer } from '../lib/game';
 import { PlayerData } from '../declarations/global';
+import { getForceData } from './force-data';
 
 export function initPlayer(playerIndex: number): void {
 	let player = getPlayer(playerIndex);
@@ -17,10 +18,10 @@ export function initPlayer(playerIndex: number): void {
  * @param force
  */
 export function initForce(force: LuaForce) {
-	let force_data = GlobalData.forceData.find((x) => x.name === force.name);
+	let force_data = getForceData(force.name);
 	if (!force_data) {
-		GlobalData.forceData.push({ name: force.name, resourceSites: [] });
-		force_data = GlobalData.forceData[GlobalData.forceData.length - 1];
+		GlobalData.forceData[force.name] = { resourceSites: [] };
+		return GlobalData.forceData[force.name];
 	}
 	return force_data;
 }
@@ -28,3 +29,5 @@ export function initForce(force: LuaForce) {
 export function getPlayerData(playerIndex: number): PlayerData | undefined {
 	return GlobalData.playerData.find((x) => x.index === playerIndex);
 }
+
+

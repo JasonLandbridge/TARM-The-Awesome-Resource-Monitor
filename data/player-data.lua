@@ -1,17 +1,16 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 19,["8"] = 20,["9"] = 20,["10"] = 20,["11"] = 20,["12"] = 21,["13"] = 22,["14"] = 23,["16"] = 25,["17"] = 19,["18"] = 28,["19"] = 29,["20"] = 29,["21"] = 29,["22"] = 29,["23"] = 28,["24"] = 4,["25"] = 5,["26"] = 6,["29"] = 9,["30"] = 10,["31"] = 11,["33"] = 4});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 3,["8"] = 3,["9"] = 20,["10"] = 21,["11"] = 22,["12"] = 23,["13"] = 24,["15"] = 26,["16"] = 20,["17"] = 29,["18"] = 30,["19"] = 30,["20"] = 30,["21"] = 30,["22"] = 29,["23"] = 5,["24"] = 6,["25"] = 7,["28"] = 10,["29"] = 11,["30"] = 12,["32"] = 5});
 local ____exports = {}
 local ____game = require("lib.game")
 local getPlayer = ____game.getPlayer
+local ____force_2Ddata = require("data.force-data")
+local getForceData = ____force_2Ddata.getForceData
 function ____exports.initForce(self, force)
-    local force_data = __TS__ArrayFind(
-        GlobalData.forceData,
-        function(____, x) return x.name == force.name end
-    )
+    local force_data = getForceData(nil, force.name)
     if not force_data then
-        __TS__ArrayPush(GlobalData.forceData, {name = force.name, resourceSites = {}})
-        force_data = GlobalData.forceData[#GlobalData.forceData]
+        GlobalData.forceData[force.name] = {resourceSites = {}}
+        return GlobalData.forceData[force.name]
     end
     return force_data
 end

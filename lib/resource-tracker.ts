@@ -1,11 +1,13 @@
-import { getPlayer } from './game';
-import { getPlayerData } from '../data/player-data';
+import { getPlayer, getPlayers } from './game';
+import { getPlayerData, initPlayer } from '../data/player-data';
 import { addResourceSiteToForce, getForceData } from '../data/force-data';
 import Log from './log';
 import { addEntity } from './resource-cache';
-import { PlayerData } from '../declarations/global';
+import { PlayerData, ResourceSite } from '../declarations/global';
 import SettingsData from '../data/settings-data';
-import { Entity } from '../constants';
+import { Entity, General } from '../constants';
+import { findCenter, findResourceAt, getOctantName, shiftPosition } from './common';
+import { distance } from 'util';
 
 /**
  *
@@ -26,7 +28,7 @@ export function createResourceSite(playerIndex: number) {
 		return;
 	}
 
-	addResourceSiteToForce(forceData?.name, resourceSite);
+	addResourceSiteToForce(player.force.name, resourceSite);
 	clearCurrentSite(playerIndex);
 
 	if (resourceSite.isSiteExpanding) {
@@ -83,6 +85,12 @@ export function addResource(playerIndex: number, entity: LuaEntity) {
 
 	if (!playerData.currentSite) {
 		playerData.currentSite = {
+			isOverlayBeingCreated: false,
+			center: [0, 0],
+			finalizingSince: 0,
+			iterating: undefined,
+			orePerMinute: 0,
+			remainingPerMille: 0,
 			addedAt: game.tick,
 			surface: entity.surface,
 			force: player.force,
@@ -91,7 +99,7 @@ export function addResource(playerIndex: number, entity: LuaEntity) {
 			amount: 0,
 			entityCount: 0,
 			etdMinutes: 0,
-			extends: {
+			extents: {
 				left: entity.position.x,
 				right: entity.position.x,
 				top: entity.position.y,
@@ -108,7 +116,7 @@ export function addResource(playerIndex: number, entity: LuaEntity) {
 			name: '',
 			nextToOverlay: {},
 			originalAmount: 0,
-			trackerIndices: [],
+			trackerIndices: []
 		};
 	}
 
@@ -149,16 +157,16 @@ export function addSingleEntity(playerIndex: number, entity: LuaEntity) {
 	resourceSite.amount += entity.amount;
 
 	// Resize the site bounds if necessary
-	if (entity.position.x < resourceSite.extends.left) {
-		resourceSite.extends.left = entity.position.x;
-	} else if (entity.position.x > resourceSite.extends.right) {
-		resourceSite.extends.right = entity.position.x;
+	if (entity.position.x < resourceSite.extents.left) {
+		resourceSite.extents.left = entity.position.x;
+	} else if (entity.position.x > resourceSite.extents.right) {
+		resourceSite.extents.right = entity.position.x;
 	}
 
-	if (entity.position.y < resourceSite.extends.top) {
-		resourceSite.extends.top = entity.position.y;
-	} else if (entity.position.x > resourceSite.extends.bottom) {
-		resourceSite.extends.bottom = entity.position.y;
+	if (entity.position.y < resourceSite.extents.top) {
+		resourceSite.extents.top = entity.position.y;
+	} else if (entity.position.x > resourceSite.extents.bottom) {
+		resourceSite.extents.bottom = entity.position.y;
 	}
 
 	// Show blue overlay of resources selected
@@ -187,3 +195,106 @@ export function addOverlayOnResource(entity: LuaEntity, playerData: PlayerData) 
 
 	playerData.overlays.push(overlay);
 }
+
+export function scanResourceSite(playerIndex: number) {
+	let currentSite = getPlayerData(playerIndex)?.currentSite;
+	if (!currentSite) {
+		return;
+	}
+
+	let toScan = Math.min(30, currentSite.nextToScan.length);
+
+	for (let i = 1; toScan; i++) {
+		let entity = currentSite.nextToScan.pop();
+		if (!entity) {
+			continue;
+		}
+		let position = entity.position;
+		let surface = entity.surface;
+
+		for (const direction of General.Directions) {
+			let resourceFound = findResourceAt(surface, shiftPosition(position, direction));
+			if (resourceFound && resourceFound.name === currentSite.oreType) {
+				addSingleEntity(playerIndex, resourceFound);
+			}
+		}
+	}
+}
+
+export function finalizeResourceSite(playerIndex: number) {
+	let player = getPlayer(playerIndex);
+	let playerData = getPlayerData(playerIndex);
+	if (!(player && playerData)) {
+		return;
+	}
+
+	let resourceSite = playerData.currentSite;
+	if (!resourceSite) {
+		return;
+	}
+
+	resourceSite.finalizing = true;
+	resourceSite.finalizingSince = game.tick;
+	resourceSite.initialAmount = resourceSite.amount;
+	resourceSite.orePerMinute = 0;
+	resourceSite.remainingPerMille = 1000;
+	resourceSite.center = findCenter(resourceSite.extents);
+
+	// Don't rename a site we've expanded!
+	// (if the site name changes it'll create a new site instead of replacing the existing one)
+	if (!resourceSite.isSiteExpanding) {
+		let surfaceName = '';
+		if (SettingsData.PrefixSiteWithSurface) {
+			surfaceName = resourceSite.surface.name + ' ';
+		}
+		resourceSite.name = `${surfaceName}${resourceSite.name} ${getOctantName(resourceSite.center)} ${distance(
+			[0, 0],
+			resourceSite.center,
+		)}`;
+	}
+
+	let updateCycle = resourceSite.addedAt % SettingsData.TickBetweenChecks;
+	countDeposits(resourceSite, updateCycle);
+}
+
+function countDeposits(resourceSite: ResourceSite, updateCycle: number) {}
+
+export function updatePlayers(event: EventData) {
+	if (!GlobalData || !GlobalData.playerData) {
+		return;
+	}
+
+	for (const player of getPlayers()) {
+		let playerData = getPlayerData(player.index);
+		if (!playerData) {
+			initPlayer(player.index);
+			playerData = getPlayerData(player.index);
+		} else if (!player.connected && playerData.currentSite) {
+			clearCurrentSite(player.index);
+		}
+
+		if (playerData?.currentSite) {
+			let resourceSite = playerData.currentSite;
+
+			if (resourceSite.nextToScan.length > 0) {
+				scanResourceSite(player.index);
+			} else if (!resourceSite.finalizing) {
+				finalizeResourceSite(player.index);
+			} else if (resourceSite.finalizingSince + 120 === event.tick) {
+				createResourceSite(player.index);
+			}
+
+			if (resourceSite.isOverlayBeingCreated) {
+				processOverlayForExistingResourceSite(player.index);
+			}
+		}
+
+		if (playerData && event.tick % playerData.guiUpdateTicks === 15 + player.index) {
+			updateUi(player.index);
+		}
+	}
+}
+
+export function updateUi(playerIndex: number) {}
+
+export function processOverlayForExistingResourceSite(index: number) {}

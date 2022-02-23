@@ -8,4 +8,8 @@ export default class SettingsData {
 	public static get OverlayStep(): number {
 		return Number(settings.global[Settings.OverlayStep].value);
 	}
+
+	public static get PrefixSiteWithSurface(): boolean {
+		return Boolean(settings.global[Settings.PrefixSiteWithSurface].value);
+	}
 }

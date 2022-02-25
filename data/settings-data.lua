@@ -13,28 +13,28 @@ __TS__ObjectDefineProperty(
     SettingsData,
     "TickBetweenChecks",
     {get = function(self)
-        return __TS__Number(settings.global[Settings.TickBetweenChecks].value)
+        return settings.global[Settings.TickBetweenChecks].value
     end}
 )
 __TS__ObjectDefineProperty(
     SettingsData,
     "OverlayStep",
     {get = function(self)
-        return __TS__Number(settings.global[Settings.OverlayStep].value)
+        return settings.global[Settings.OverlayStep].value
     end}
 )
 __TS__ObjectDefineProperty(
     SettingsData,
     "PrefixSiteWithSurface",
     {get = function(self)
-        return Boolean(nil, settings.global[Settings.PrefixSiteWithSurface].value)
+        return settings.global[Settings.PrefixSiteWithSurface].value
     end}
 )
 __TS__ObjectDefineProperty(
     SettingsData,
     "EntitiesPerTick",
     {get = function(self)
-        return __TS__Number(settings.global[Settings.EntitiesPerTick].value)
+        return settings.global[Settings.EntitiesPerTick].value
     end}
 )
 ____exports.default = SettingsData

@@ -3,9 +3,11 @@
 		"target": "esnext",
 		"lib": ["esnext"],
 		"moduleResolution": "node",
-		"types": ["typed-factorio/runtime"],
 		"strict": true,
-		"baseUrl": "./"
+		"baseUrl": "./",
+		// Doc: https://typescripttolua.github.io/docs/advanced/language-extensions/
+		"types": ["typed-factorio/runtime", "typescript-to-lua/language-extensions"],
+
 		// Path aliases don't seem to work in TypeScriptToLua
 		// "paths": {
 		// 	"@const": ["./constants/index.ts"],

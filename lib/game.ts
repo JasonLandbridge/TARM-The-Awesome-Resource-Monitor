@@ -1,10 +1,16 @@
 export function getPlayer(playerIndex: number): LuaPlayer | undefined {
-	if (playerIndex <= 0) {
-		return undefined;
-	}
-	return game.players[playerIndex];
+	return getPlayers().find((x) => x.index === playerIndex);
 }
 
+/**
+ * Retrieves all current players of the game
+ */
 export function getPlayers(): LuaPlayer[] {
-	return game.players as never as LuaPlayer[];
+	let players: LuaPlayer[] = [];
+	// pairs must be used to retrieve the game.players
+	for (const [index, player] of pairs(game.players)) {
+		players.push(player);
+	}
+
+	return players;
 }

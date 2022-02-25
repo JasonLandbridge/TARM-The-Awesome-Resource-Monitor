@@ -2,18 +2,18 @@ import Settings from '../constants/settings';
 
 export default class SettingsData {
 	public static get TickBetweenChecks(): number {
-		return Number(settings.global[Settings.TickBetweenChecks].value);
+		return settings.global[Settings.TickBetweenChecks].value as number;
 	}
 
 	public static get OverlayStep(): number {
-		return Number(settings.global[Settings.OverlayStep].value);
+		return settings.global[Settings.OverlayStep].value as number;
 	}
 
 	public static get PrefixSiteWithSurface(): boolean {
-		return Boolean(settings.global[Settings.PrefixSiteWithSurface].value);
+		return settings.global[Settings.PrefixSiteWithSurface].value as boolean;
 	}
 
 	public static get EntitiesPerTick(): number {
-		return Number(settings.global[Settings.EntitiesPerTick].value);
+		return settings.global[Settings.EntitiesPerTick].value as number;
 	}
 }

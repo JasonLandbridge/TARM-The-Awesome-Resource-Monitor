@@ -205,6 +205,7 @@ export function addOverlayOnResource(entity: LuaEntity, playerData: PlayerData) 
 export function scanResourceSite(playerIndex: number) {
 	let currentSite = getPlayerData(playerIndex)?.currentSite;
 	if (!currentSite) {
+		Log.errorAll(`scanResourceSite() => Could not retrieve the currentSite with playerIndex: ${playerIndex}`)
 		return;
 	}
 
@@ -213,7 +214,8 @@ export function scanResourceSite(playerIndex: number) {
 	for (let i = 1; toScan; i++) {
 		let entity = currentSite.nextToScan.pop();
 		if (!entity) {
-			continue;
+			Log.debugAll(`scanResourceSite() => No more resources to scan for site \"${currentSite.name}\"!`)
+			break;
 		}
 		let position = entity.position;
 		let surface = entity.surface;
@@ -270,7 +272,8 @@ export function updatePlayers(event: EventData) {
 		return;
 	}
 
-	for (const player of getPlayers()) {
+	let players = getPlayers();
+	for (const player of players) {
 		let playerData = getPlayerData(player.index);
 		if (!playerData) {
 			initPlayer(player.index);

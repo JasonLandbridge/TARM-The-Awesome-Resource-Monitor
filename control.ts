@@ -14,6 +14,10 @@ script.on_init(() => {
 	setupGlobalData();
 });
 
+script.on_configuration_changed(() => {
+	setupGlobalData();
+})
+
 script.on_load(() => {
 	ResourceCache.OnLoad();
 });
@@ -48,9 +52,9 @@ script.on_event(defines.events.on_player_selected_area, (event: OnPlayerSelected
 	if (!playerData) {
 		return;
 	}
-	
+
 	// if we have an expanding site, submit it. else, just drop the current site
-	if (playerData.currentSite && playerData.currentSite.isSiteExpanding) {
+	if (playerData.currentSite) {
 		createResourceSite(event.player_index);
 	} else {
 		clearCurrentSite(event.player_index);

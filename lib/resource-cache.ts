@@ -8,19 +8,14 @@ export class ResourceCache implements IEvent {
 	OnLoad(): void {
 		let resourceTracker = getResourceTracker();
 		let entities = getTrackingData();
-		if (!resourceTracker || entities.length === 0) {
+		if (!resourceTracker || entities.size === 0) {
 			return;
-		}
-
-		for (let trackerIndex = 0; trackerIndex < entities.length; trackerIndex++) {
-			let key = positionToString(entities[trackerIndex].position);
-			resourceTracker.positionCache[key] = trackerIndex;
 		}
 	}
 
 	OnTick(event: OnTickEvent): void {
 		let resourceTracker = getResourceTracker();
-		if (!resourceTracker || resourceTracker.trackedEntities.length === 0) {
+		if (!resourceTracker || resourceTracker.trackedEntities.size === 0) {
 			return;
 		}
 
@@ -58,11 +53,11 @@ export class ResourceCache implements IEvent {
 	 * Note: if the tracker already had the entity,
 	 * it will simply return the existing tracker index rather than create a new one.
 	 * @param entity
-	 * @return Returns the entity's tracker index
+	 * @return Returns the positionKey
 	 */
-	addEntity(entity: LuaEntity): number {
+	addEntity(entity: LuaEntity): string | null {
 		if (!entity || !entity.valid || entity.type !== 'resource') {
-			return -1;
+			return null;
 		}
 
 		let positionKey = positionToString(entity.position);
@@ -76,21 +71,20 @@ export class ResourceCache implements IEvent {
 			trackingData.position = entity.position;
 			trackingData.resourceAmount = entity.amount;
 
-			return this.getEntityIndexInCache(entity);
+			return positionKey;
 		}
 
 		// Otherwise, create the tracking data and store it, including position_cache
 		// TODO this should not all be in one huge array, can be split up
-		GlobalData.resourceTracker.trackedEntities.push({
+
+		GlobalData.resourceTracker.trackedEntities.set(positionKey, {
 			entity: entity,
 			valid: entity.valid,
 			position: entity.position,
 			resourceAmount: entity.amount,
 		});
 
-		let pushedIndex = GlobalData.resourceTracker.trackedEntities.length - 1;
-		GlobalData.resourceTracker.positionCache[positionKey] = pushedIndex;
-		return pushedIndex;
+		return positionKey;
 	}
 
 	hasEntity(entity: LuaEntity): boolean {
@@ -98,35 +92,14 @@ export class ResourceCache implements IEvent {
 			return false;
 		}
 		let positionKey = positionToString(entity.position);
-		return !!GlobalData.resourceTracker.positionCache[positionKey];
-	}
-
-	/**
-	 * Looks up the index of the entity in the
-	 * @param entity
-	 * @return -1 if it couldn't find it
-	 */
-	getEntityIndexInCache(entity: LuaEntity): number {
-		if (!entity || !entity.valid || entity.type !== 'resource') {
-			return -1;
-		}
-		let positionKey = positionToString(entity.position);
-		let positionIndex = GlobalData.resourceTracker.positionCache[positionKey];
-		if (!positionIndex) {
-			return -1;
-		}
-		return positionIndex;
+		return GlobalData.resourceTracker.trackedEntities.has(positionKey);
 	}
 
 	getEntity(positionKey: string): TrackingData | undefined {
 		if (positionKey === '') {
 			return undefined;
 		}
-		let positionIndex = GlobalData.resourceTracker.positionCache[positionKey];
-		if (positionIndex && positionIndex > -1) {
-			return GlobalData.resourceTracker.trackedEntities[positionIndex];
-		}
-		return undefined;
+		return GlobalData.resourceTracker.trackedEntities.get(positionKey);
 	}
 }
 

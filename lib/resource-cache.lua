@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 3,["8"] = 3,["9"] = 3,["10"] = 5,["11"] = 5,["12"] = 7,["13"] = 7,["14"] = 7,["16"] = 7,["17"] = 8,["18"] = 9,["19"] = 10,["20"] = 11,["24"] = 15,["25"] = 15,["26"] = 16,["27"] = 17,["28"] = 15,["31"] = 8,["32"] = 21,["33"] = 22,["34"] = 23,["37"] = 27,["38"] = 28,["40"] = 32,["41"] = 33,["43"] = 34,["44"] = 34,["45"] = 35,["46"] = 36,["47"] = 37,["48"] = 38,["49"] = 39,["50"] = 40,["53"] = 44,["54"] = 45,["55"] = 46,["56"] = 47,["58"] = 49,["60"] = 34,["63"] = 52,["64"] = 53,["65"] = 21,["66"] = 63,["67"] = 64,["68"] = 65,["70"] = 68,["71"] = 69,["72"] = 70,["73"] = 74,["74"] = 75,["75"] = 76,["76"] = 77,["77"] = 79,["79"] = 84,["80"] = 91,["81"] = 92,["82"] = 93,["83"] = 63,["84"] = 96,["85"] = 97,["86"] = 98,["88"] = 100,["89"] = 101,["90"] = 96,["91"] = 109,["92"] = 110,["93"] = 111,["95"] = 113,["96"] = 114,["97"] = 115,["98"] = 116,["100"] = 118,["101"] = 109,["102"] = 121,["103"] = 122,["104"] = 123,["106"] = 125,["107"] = 126,["108"] = 127,["110"] = 129,["111"] = 121,["112"] = 133,["113"] = 134});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 3,["8"] = 3,["9"] = 3,["10"] = 5,["11"] = 5,["12"] = 7,["13"] = 7,["14"] = 7,["16"] = 7,["17"] = 8,["18"] = 9,["19"] = 10,["20"] = 11,["23"] = 8,["24"] = 16,["25"] = 17,["26"] = 18,["29"] = 22,["30"] = 23,["32"] = 27,["33"] = 28,["35"] = 29,["36"] = 29,["37"] = 30,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["42"] = 35,["45"] = 39,["46"] = 40,["47"] = 41,["48"] = 42,["50"] = 44,["52"] = 29,["55"] = 47,["56"] = 48,["57"] = 16,["58"] = 58,["59"] = 59,["60"] = 60,["62"] = 63,["63"] = 64,["64"] = 65,["65"] = 69,["66"] = 70,["67"] = 71,["68"] = 72,["69"] = 74,["71"] = 80,["72"] = 87,["73"] = 58,["74"] = 90,["75"] = 91,["76"] = 92,["78"] = 94,["79"] = 95,["80"] = 90,["81"] = 98,["82"] = 99,["83"] = 100,["85"] = 102,["86"] = 98,["87"] = 106,["88"] = 107});
 local ____exports = {}
 local ____common = require("lib.common")
 local positionToString = ____common.positionToString
@@ -17,25 +17,17 @@ end
 function ResourceCache.prototype.OnLoad(self)
     local resourceTracker = getResourceTracker(nil)
     local entities = getTrackingData(nil)
-    if not resourceTracker or #entities == 0 then
+    if not resourceTracker or entities.size == 0 then
         return
-    end
-    do
-        local trackerIndex = 0
-        while trackerIndex < #entities do
-            local key = positionToString(nil, entities[trackerIndex + 1].position)
-            resourceTracker.positionCache[key] = trackerIndex
-            trackerIndex = trackerIndex + 1
-        end
     end
 end
 function ResourceCache.prototype.OnTick(self, event)
     local resourceTracker = getResourceTracker(nil)
-    if not resourceTracker or #resourceTracker.trackedEntities == 0 then
+    if not resourceTracker or resourceTracker.trackedEntities.size == 0 then
         return
     end
     if not resourceTracker.iterationFunction then
-        resourceTracker.iterationFunction = __TS__ArrayEntries(resourceTracker.trackedEntities)
+        resourceTracker.iterationFunction = resourceTracker.trackedEntities:entries()
     end
     local key = resourceTracker.iterationKey
     local iterationFunc = resourceTracker.iterationFunction
@@ -65,7 +57,7 @@ function ResourceCache.prototype.OnTick(self, event)
 end
 function ResourceCache.prototype.addEntity(self, entity)
     if not entity or not entity.valid or entity.type ~= "resource" then
-        return -1
+        return nil
     end
     local positionKey = positionToString(nil, entity.position)
     local trackingData = self:getEntity(positionKey)
@@ -74,40 +66,23 @@ function ResourceCache.prototype.addEntity(self, entity)
         trackingData.valid = entity.valid
         trackingData.position = entity.position
         trackingData.resourceAmount = entity.amount
-        return self:getEntityIndexInCache(entity)
+        return positionKey
     end
-    __TS__ArrayPush(GlobalData.resourceTracker.trackedEntities, {entity = entity, valid = entity.valid, position = entity.position, resourceAmount = entity.amount})
-    local pushedIndex = #GlobalData.resourceTracker.trackedEntities - 1
-    GlobalData.resourceTracker.positionCache[positionKey] = pushedIndex
-    return pushedIndex
+    GlobalData.resourceTracker.trackedEntities:set(positionKey, {entity = entity, valid = entity.valid, position = entity.position, resourceAmount = entity.amount})
+    return positionKey
 end
 function ResourceCache.prototype.hasEntity(self, entity)
     if not entity or not entity.valid or entity.type ~= "resource" then
         return false
     end
     local positionKey = positionToString(nil, entity.position)
-    return not not GlobalData.resourceTracker.positionCache[positionKey]
-end
-function ResourceCache.prototype.getEntityIndexInCache(self, entity)
-    if not entity or not entity.valid or entity.type ~= "resource" then
-        return -1
-    end
-    local positionKey = positionToString(nil, entity.position)
-    local positionIndex = GlobalData.resourceTracker.positionCache[positionKey]
-    if not positionIndex then
-        return -1
-    end
-    return positionIndex
+    return GlobalData.resourceTracker.trackedEntities:has(positionKey)
 end
 function ResourceCache.prototype.getEntity(self, positionKey)
     if positionKey == "" then
         return nil
     end
-    local positionIndex = GlobalData.resourceTracker.positionCache[positionKey]
-    if positionIndex and positionIndex > -1 then
-        return GlobalData.resourceTracker.trackedEntities[positionIndex + 1]
-    end
-    return nil
+    return GlobalData.resourceTracker.trackedEntities:get(positionKey)
 end
 local resourceCache = __TS__New(____exports.ResourceCache)
 ____exports.default = resourceCache

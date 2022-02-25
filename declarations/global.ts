@@ -21,10 +21,10 @@ export interface ForceData {
 }
 
 export interface ResourceTracker {
-	trackedEntities: TrackingData[];
-	positionCache: { [name: string]: number };
+	trackedEntities: Map<string, TrackingData>;
+	positionCache: Map<string, number>;
 	iterationKey?: string;
-	iterationFunction?: IterableIterator<[number, TrackingData]>;
+	iterationFunction?: IterableIterator<[string, TrackingData]>;
 }
 
 export interface TrackingData {
@@ -54,7 +54,10 @@ export interface ResourceSite {
 	addedAt: number;
 	surface: LuaSurface;
 	force: LuaForce;
-	trackerIndices: any[];
+	/**
+	 * The [entities]{@link TrackingData} belonging to this [Resource Site]{@link ResourceSite}
+	 */
+	trackedPositionKeys: string[];
 	entityCount: number;
 	extents: Extend;
 	nextToScan: LuaEntity[];

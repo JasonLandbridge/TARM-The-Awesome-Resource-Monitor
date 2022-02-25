@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 4,["10"] = 4,["11"] = 6,["12"] = 7,["13"] = 8,["14"] = 9,["16"] = 19,["17"] = 20,["19"] = 23,["20"] = 24,["21"] = 25,["22"] = 25,["23"] = 25,["24"] = 25,["25"] = 25,["26"] = 25,["27"] = 25,["28"] = 25,["29"] = 25,["30"] = 26,["31"] = 27,["34"] = 33,["35"] = 34,["37"] = 37,["38"] = 37,["39"] = 37,["40"] = 38,["41"] = 37,["42"] = 37,["43"] = 6,["44"] = 49,["45"] = 50,["46"] = 50,["47"] = 50,["49"] = 50,["50"] = 50,["51"] = 50,["53"] = 50,["54"] = 49,["55"] = 53,["56"] = 54,["57"] = 54,["58"] = 54,["60"] = 54,["61"] = 53});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 4,["10"] = 4,["11"] = 6,["12"] = 7,["13"] = 8,["14"] = 9,["15"] = 9,["16"] = 9,["17"] = 12,["18"] = 12,["19"] = 12,["20"] = 9,["21"] = 9,["23"] = 19,["24"] = 20,["26"] = 23,["27"] = 24,["28"] = 25,["29"] = 25,["30"] = 25,["31"] = 25,["32"] = 25,["33"] = 25,["34"] = 25,["35"] = 25,["36"] = 25,["37"] = 26,["38"] = 27,["41"] = 33,["42"] = 34,["43"] = 34,["44"] = 34,["45"] = 34,["47"] = 37,["48"] = 37,["49"] = 37,["50"] = 38,["51"] = 37,["52"] = 37,["53"] = 6,["54"] = 49,["55"] = 50,["56"] = 50,["57"] = 50,["59"] = 50,["60"] = 50,["61"] = 50,["63"] = 50,["64"] = 49,["65"] = 53,["66"] = 54,["67"] = 54,["68"] = 54,["70"] = 54,["71"] = 53});
 local ____exports = {}
 local ____player_2Ddata = require("data.player-data")
 local initPlayer = ____player_2Ddata.initPlayer
@@ -11,7 +11,14 @@ local Log = ____log.default
 function ____exports.setupGlobalData(self)
     if not GlobalData then
         Log:debugAll("setupGlobalData => Setting up GlobalData")
-        GlobalData = {playerData = {}, forceData = {}, resourceTracker = {trackedEntities = {}, positionCache = {}}}
+        GlobalData = {
+            playerData = {},
+            forceData = {},
+            resourceTracker = {
+                trackedEntities = __TS__New(Map),
+                positionCache = __TS__New(Map)
+            }
+        }
     end
     if not GlobalData.playerData then
         GlobalData.playerData = {}
@@ -32,7 +39,10 @@ function ____exports.setupGlobalData(self)
         end
     end
     if not GlobalData.resourceTracker then
-        GlobalData.resourceTracker = {trackedEntities = {}, positionCache = {}}
+        GlobalData.resourceTracker = {
+            trackedEntities = __TS__New(Map),
+            positionCache = __TS__New(Map)
+        }
     end
     __TS__ArrayForEach(
         getPlayers(nil),
@@ -50,7 +60,7 @@ function ____exports.getTrackingData(self)
     if ____GlobalData_resourceTracker_trackedEntities_0 ~= nil then
         ____GlobalData_resourceTracker_trackedEntities_0 = ____GlobalData_resourceTracker_trackedEntities_0.trackedEntities
     end
-    return ____GlobalData_resourceTracker_trackedEntities_0 or ({})
+    return ____GlobalData_resourceTracker_trackedEntities_0 or __TS__New(Map)
 end
 function ____exports.getResourceTracker(self)
     local ____GlobalData_resourceTracker_4 = GlobalData

@@ -10,8 +10,8 @@ export function setupGlobalData() {
 			playerData: [],
 			forceData: {},
 			resourceTracker: {
-				trackedEntities: [],
-				positionCache: {},
+				trackedEntities: new Map<string, TrackingData>(),
+				positionCache: new Map<string, number>(),
 			},
 		};
 	}
@@ -31,7 +31,7 @@ export function setupGlobalData() {
 	}
 
 	if (!GlobalData['resourceTracker']) {
-		GlobalData['resourceTracker'] = { trackedEntities: [], positionCache: {} };
+		GlobalData['resourceTracker'] = { trackedEntities: new Map<string, TrackingData>(), positionCache: new Map<string, number>() };
 	}
 
 	getPlayers().forEach((value, index) => {
@@ -46,8 +46,8 @@ export function setupGlobalData() {
 	return GlobalData;
 }*/
 
-export function getTrackingData(): TrackingData[] {
-	return GlobalData?.resourceTracker?.trackedEntities ?? [];
+export function getTrackingData(): Map<string, TrackingData> {
+	return GlobalData?.resourceTracker?.trackedEntities ?? new Map<string, TrackingData>();
 }
 
 export function getResourceTracker(): ResourceTracker | undefined {

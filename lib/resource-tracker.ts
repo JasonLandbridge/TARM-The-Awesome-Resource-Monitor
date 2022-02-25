@@ -1,7 +1,7 @@
+import Log from './log';
 import { getPlayer, getPlayers } from './game';
 import { getPlayerData, initPlayer } from '../data/player-data';
 import { addResourceSiteToForce, getForceData } from '../data/force-data';
-import Log from './log';
 import ResourceCache from './resource-cache';
 import { PlayerData, ResourceSite } from '../declarations/global';
 import SettingsData from '../data/settings-data';
@@ -116,7 +116,7 @@ export function addResource(playerIndex: number, entity: LuaEntity) {
 			name: '',
 			nextToOverlay: {},
 			originalAmount: 0,
-			trackerIndices: []
+			trackedPositionKeys: []
 		};
 	}
 
@@ -140,9 +140,15 @@ export function addSingleEntity(playerIndex: number, entity: LuaEntity) {
 		Log.warn(playerIndex, `addSingleEntity() => \'playerData.currentSite\' was invalid`);
 		return;
 	}
-	let trackerCacheIndex = ResourceCache.addEntity(entity);
+
+	let positionKey = ResourceCache.addEntity(entity);
+	if (!positionKey){
+		Log.errorAll(`addSingleEntity() => Failed to add entity ${entity.position}`)
+		return;
+	}
+
 	// Don't add multiple times
-	if (resourceSite.trackerIndices[trackerCacheIndex]) {
+	if (resourceSite.trackedPositionKeys.find(x => x === positionKey)) {
 		return;
 	}
 
@@ -151,7 +157,7 @@ export function addSingleEntity(playerIndex: number, entity: LuaEntity) {
 	}
 
 	// Memorize this entity
-	resourceSite.trackerIndices[trackerCacheIndex] = true;
+	resourceSite.trackedPositionKeys.push(positionKey);
 	resourceSite.entityCount++;
 	resourceSite.nextToScan.push(entity);
 	resourceSite.amount += entity.amount;

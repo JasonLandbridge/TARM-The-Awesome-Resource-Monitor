@@ -48,13 +48,12 @@ script.on_event(defines.events.on_player_selected_area, (event: OnPlayerSelected
 	if (!playerData) {
 		return;
 	}
-	if (event.entities.length < 1) {
-		// if we have an expanding site, submit it. else, just drop the current site
-		if (playerData.currentSite && playerData.currentSite.isSiteExpanding) {
-			createResourceSite(event.player_index);
-		} else {
-			clearCurrentSite(event.player_index);
-		}
+	
+	// if we have an expanding site, submit it. else, just drop the current site
+	if (playerData.currentSite && playerData.currentSite.isSiteExpanding) {
+		createResourceSite(event.player_index);
+	} else {
+		clearCurrentSite(event.player_index);
 	}
 
 	for (const entity of event.entities) {

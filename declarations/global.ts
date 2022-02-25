@@ -21,12 +21,14 @@ export interface ForceData {
 }
 
 export interface ResourceTracker {
-	entities: TrackingData[];
+	trackedEntities: TrackingData[];
 	positionCache: { [name: string]: number };
+	iterationKey?: string;
+	iterationFunction?: IterableIterator<[number, TrackingData]>;
 }
 
 export interface TrackingData {
-	entity: LuaEntity;
+	entity?: LuaEntity;
 	valid: boolean;
 	position: MapPositionTable;
 	resourceAmount: number;
@@ -75,5 +77,5 @@ export interface Extend {
 
 export interface Iteration {
 	running: boolean;
-	state: boolean[]
+	state: boolean[];
 }

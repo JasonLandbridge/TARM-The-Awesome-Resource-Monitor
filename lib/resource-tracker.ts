@@ -2,7 +2,7 @@ import { getPlayer, getPlayers } from './game';
 import { getPlayerData, initPlayer } from '../data/player-data';
 import { addResourceSiteToForce, getForceData } from '../data/force-data';
 import Log from './log';
-import { addEntity } from './resource-cache';
+import ResourceCache from './resource-cache';
 import { PlayerData, ResourceSite } from '../declarations/global';
 import SettingsData from '../data/settings-data';
 import { Entity, General } from '../constants';
@@ -140,7 +140,7 @@ export function addSingleEntity(playerIndex: number, entity: LuaEntity) {
 		Log.warn(playerIndex, `addSingleEntity() => \'playerData.currentSite\' was invalid`);
 		return;
 	}
-	let trackerCacheIndex = addEntity(entity);
+	let trackerCacheIndex = ResourceCache.addEntity(entity);
 	// Don't add multiple times
 	if (resourceSite.trackerIndices[trackerCacheIndex]) {
 		return;

@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 7,["20"] = 8,["21"] = 8,["22"] = 8,["23"] = 8,["24"] = 8,["25"] = 10,["26"] = 12,["27"] = 13,["28"] = 12,["29"] = 16,["30"] = 16,["31"] = 16,["32"] = 17,["33"] = 16,["34"] = 16,["35"] = 20,["36"] = 20,["37"] = 20,["38"] = 21,["39"] = 22,["40"] = 23,["41"] = 24,["44"] = 20,["45"] = 20,["46"] = 29,["47"] = 29,["48"] = 29,["49"] = 30,["50"] = 31,["51"] = 32,["53"] = 29,["54"] = 29,["55"] = 36,["56"] = 36,["57"] = 36,["58"] = 37,["61"] = 41,["62"] = 42,["65"] = 45,["66"] = 47,["67"] = 48,["69"] = 50,["72"] = 54,["73"] = 55,["74"] = 56,["77"] = 36,["78"] = 36,["79"] = 61,["80"] = 61,["81"] = 61,["82"] = 62,["83"] = 61,["84"] = 61});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 7,["20"] = 8,["21"] = 8,["22"] = 8,["23"] = 8,["24"] = 8,["25"] = 9,["26"] = 9,["27"] = 11,["28"] = 13,["29"] = 14,["30"] = 13,["31"] = 17,["32"] = 18,["33"] = 17,["34"] = 21,["35"] = 21,["36"] = 21,["37"] = 22,["38"] = 23,["39"] = 21,["40"] = 21,["41"] = 26,["42"] = 26,["43"] = 26,["44"] = 27,["45"] = 28,["46"] = 29,["47"] = 30,["50"] = 26,["51"] = 26,["52"] = 35,["53"] = 35,["54"] = 35,["55"] = 36,["56"] = 37,["57"] = 38,["59"] = 35,["60"] = 35,["61"] = 42,["62"] = 42,["63"] = 42,["64"] = 43,["67"] = 47,["68"] = 48,["71"] = 51,["72"] = 53,["73"] = 54,["75"] = 56,["78"] = 60,["79"] = 61,["80"] = 62,["83"] = 42,["84"] = 42,["85"] = 67,["86"] = 67,["87"] = 67,["88"] = 68,["89"] = 67,["90"] = 67});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -22,13 +22,19 @@ local addResource = ____resource_2Dtracker.addResource
 local clearCurrentSite = ____resource_2Dtracker.clearCurrentSite
 local createResourceSite = ____resource_2Dtracker.createResourceSite
 local updatePlayers = ____resource_2Dtracker.updatePlayers
+local ____resource_2Dcache = require("lib.resource-cache")
+local ResourceCache = ____resource_2Dcache.default
 setup_gvv(nil)
 script.on_init(function()
     setupGlobalData(nil)
 end)
+script.on_load(function()
+    ResourceCache:OnLoad()
+end)
 script.on_event(
-    defines.events.on_tick,
+    Events.OnTick,
     function(event)
+        ResourceCache:OnTick(event)
         updatePlayers(nil, event)
     end
 )

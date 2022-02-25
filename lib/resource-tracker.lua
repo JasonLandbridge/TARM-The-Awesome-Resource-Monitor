@@ -15,7 +15,7 @@ local getForceData = ____force_2Ddata.getForceData
 local ____log = require("lib.log")
 local Log = ____log.default
 local ____resource_2Dcache = require("lib.resource-cache")
-local addEntity = ____resource_2Dcache.addEntity
+local ResourceCache = ____resource_2Dcache.default
 local ____settings_2Ddata = require("data.settings-data")
 local SettingsData = ____settings_2Ddata.default
 local ____constants = require("constants.index")
@@ -52,7 +52,7 @@ function ____exports.addSingleEntity(self, playerIndex, entity)
         Log:warn(playerIndex, "addSingleEntity() => 'playerData.currentSite' was invalid")
         return
     end
-    local trackerCacheIndex = addEntity(nil, entity)
+    local trackerCacheIndex = ResourceCache:addEntity(entity)
     if resourceSite.trackerIndices[trackerCacheIndex + 1] then
         return
     end

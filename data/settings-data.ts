@@ -12,4 +12,8 @@ export default class SettingsData {
 	public static get PrefixSiteWithSurface(): boolean {
 		return Boolean(settings.global[Settings.PrefixSiteWithSurface].value);
 	}
+
+	public static get EntitiesPerTick(): number {
+		return Number(settings.global[Settings.EntitiesPerTick].value);
+	}
 }

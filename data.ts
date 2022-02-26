@@ -2,9 +2,8 @@ import { Data } from 'typed-factorio/data/types';
 import { Events, General, Paths } from 'constants';
 import { Entity } from './constants';
 import Graphics from './constants/graphics';
-
+import applyStyles from './prototypes/style';
 declare const data: Data;
-
 data.extend([
 	{
 		type: 'custom-input',
@@ -128,3 +127,8 @@ data.extend([
 		shift: [0, 0],
 	},
 ]);
+
+// region Apply Styles
+let default_gui = data.raw['gui-style'].default;
+default_gui = applyStyles(default_gui);
+// endregion

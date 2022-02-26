@@ -8,6 +8,8 @@ local ____force_2Ddata = require("data.force-data")
 local getForceData = ____force_2Ddata.getForceData
 local ____graphics = require("constants.graphics")
 local Graphics = ____graphics.default
+local ____styles = require("constants.styles")
+local Styles = ____styles.default
 function ____exports.buildInterface(self, player)
     if not player then
         return
@@ -51,7 +53,7 @@ function ____exports.buildInterface(self, player)
     zoneListFrame.style.horizontally_stretchable = true
     zoneListFrame.style.minimal_height = 300
     local zoneListHeadingsRow = zoneListFrame.add({type = "flow", name = "Zonelist.name_zonelist_headings_row", direction = "horizontal"})
-    local zoneListScroll = zoneListFrame.add({type = "scroll-pane", name = "Zonelist.name_zonelist_scroll"})
+    local zoneListScroll = zoneListFrame.add({type = "scroll-pane", name = "Zonelist.name_zonelist_scroll", style = Styles.RowsPaneStyle})
     player.opened = main_frame
     ____exports.updateHud(nil, player.index, zoneListScroll)
 end
@@ -66,10 +68,10 @@ function ____exports.updateHud(self, playerIndex, parent)
         return
     end
     for ____, resourceSite in ipairs(forceData.resourceSites) do
-        local row = parent.add({type = "button", name = resourceSite.name})
+        local row = parent.add({type = "button", name = resourceSite.name, style = Styles.RowButtonStyle})
         local row_flow = row.add({type = "flow", name = "row_flow", direction = "horizontal", ignored_by_interaction = true})
-        row_flow.add({type = "label", name = "cell_name", caption = resourceSite.name})
-        row_flow.add({type = "label", name = "cell_type", caption = resourceSite.amount})
+        row_flow.add({type = "label", name = "cell_resource_site_name", caption = resourceSite.name, style = Styles.CellNameStyle})
+        row_flow.add({type = "label", name = "cell_resource_amount", caption = resourceSite.amount, style = Styles.CellNumericValueStyle})
     end
 end
 function ____exports.toggleInterface(self, player)

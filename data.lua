@@ -8,6 +8,8 @@ local ____constants = require("constants.index")
 local Entity = ____constants.Entity
 local ____graphics = require("constants.graphics")
 local Graphics = ____graphics.default
+local ____style = require("prototypes.style")
+local applyStyles = ____style.default
 data:extend({
     {type = "custom-input", name = Events.Toggle_Interface, key_sequence = "F", order = "a"},
     {
@@ -113,4 +115,6 @@ data:extend({
         shift = {0, 0}
     }
 })
+local default_gui = data.raw["gui-style"].default
+default_gui = applyStyles(nil, default_gui)
 return ____exports

@@ -2,6 +2,7 @@ import HUD from '../constants/hud';
 import { getPlayer } from '../lib/game';
 import { getForceData } from '../data/force-data';
 import Graphics from '../constants/graphics';
+import Styles from '../constants/styles';
 
 export function toggleInterface(player: LuaPlayer) {
 	let main_frame = player.gui.screen[HUD.MainFrame] as LuaGuiElement;
@@ -94,7 +95,8 @@ export function buildInterface(player: LuaPlayer) {
 	let zoneListScroll = zoneListFrame.add({
 		type: 'scroll-pane',
 		name: 'Zonelist.name_zonelist_scroll',
-		// direction: 'vertical',
+		//direction: 'vertical',
+		style: Styles.RowsPaneStyle,
 	});
 
 	// Set to player
@@ -117,10 +119,10 @@ export function updateHud(playerIndex: number, parent: LuaGuiElement) {
 
 	for (const resourceSite of forceData.resourceSites) {
 		// Create row flow
-		let row = parent.add({ type: 'button', name: resourceSite.name }); // style: (zone == playerdata.zonelist_selected_zone and "zonelist_row_button_selected" or "zonelist_row_button")}
+		let row = parent.add({ type: 'button', name: resourceSite.name, style: Styles.RowButtonStyle }); // style: (zone == playerdata.zonelist_selected_zone and "zonelist_row_button_selected" or "zonelist_row_button")}
 		let row_flow = row.add({ type: 'flow', name: 'row_flow', direction: 'horizontal', ignored_by_interaction: true });
 
-		row_flow.add({ type: 'label', name: 'cell_name', caption: resourceSite.name });
-		row_flow.add({ type: 'label', name: 'cell_type', caption: resourceSite.amount });
+		row_flow.add({ type: 'label', name: 'cell_resource_site_name', caption: resourceSite.name, style: Styles.CellNameStyle });
+		row_flow.add({ type: 'label', name: 'cell_resource_amount', caption: resourceSite.amount, style: Styles.CellNumericValueStyle });
 	}
 }

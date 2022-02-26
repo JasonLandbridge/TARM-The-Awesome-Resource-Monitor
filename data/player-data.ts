@@ -1,5 +1,5 @@
 import { getPlayer, getPlayers } from '../lib/game';
-import { ForceData, PlayerData } from '../declarations/globalState';
+import { ForceData, PlayerData } from '../declarations/global-save-state';
 import { getForceData } from './force-data';
 import Log from '../lib/log';
 import Global from './global-data';

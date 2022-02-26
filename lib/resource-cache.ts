@@ -1,46 +1,32 @@
 import { positionToString } from './common';
-import { TrackingData } from '../declarations/globalState';
+import { TrackingData } from '../declarations/global-save-state';
 import Global from '../data/global-data';
-import { OnLoad, OnTick } from '../typings/IEvent';
+import { OnTick } from '../typings/IEvent';
 import SettingsData from '../data/settings-data';
-import Log from './log';
+import GlobalTemp from '../data/global-temp-data';
 
-export class ResourceCache implements OnLoad, OnTick {
-	OnLoad(): void {
-		if (Global.trackedResources.size === 0) {
-			return;
-		}
-
-		// Factorio saves the trackedResources as json,
-		// which need to be converted to a valid Map<string, TrackingData> on load
-		let x: Map<string, TrackingData> = new Map<string, TrackingData>();
-		for (const [key, trackingData] of Global.trackedResources) {
-			x.set(key, trackingData);
-		}
-
-		// Global.loadTrackedResources(x);
-	}
+export class ResourceCache implements OnTick {
 
 	OnTick(event: OnTickEvent): void {
-		let resourceTracker = Global.resourceTracker;
-		if (!resourceTracker || resourceTracker.trackedResources.size === 0) {
+		let resourceCache = GlobalTemp.resourceCache;
+		if (!resourceCache || resourceCache.resources.size === 0) {
 			return;
 		}
 
-		if (!resourceTracker.iterationFunction) {
-			resourceTracker.iterationFunction = resourceTracker.trackedResources.entries();
+		if (!resourceCache.iterationFunction) {
+			resourceCache.iterationFunction = resourceCache.resources.entries();
 		}
 
 		// Update all trackedEntities with the latest resource amount
-		let key = resourceTracker.iterationKey;
-		let iterationFunc = resourceTracker.iterationFunction;
+		let key = resourceCache.iterationKey;
+		let iterationFunc = resourceCache.iterationFunction;
 		for (let i = 0; i < SettingsData.EntitiesPerTick; i++) {
 			let pair = iterationFunc.next().value as [key: string, value: TrackingData];
 			key = pair[0];
 			let trackingData = pair[1];
 			if (!key) {
-				Global.resourceTracker.iterationKey = undefined;
-				Global.resourceTracker.iterationFunction = undefined;
+				GlobalTemp.resourceCache.iterationKey = undefined;
+				GlobalTemp.resourceCache.iterationFunction = undefined;
 				return;
 			}
 
@@ -52,8 +38,8 @@ export class ResourceCache implements OnLoad, OnTick {
 				trackingData.resourceAmount = trackingData.entity.amount;
 			}
 		}
-		resourceTracker.iterationKey = key;
-		resourceTracker.iterationFunction = iterationFunc;
+		resourceCache.iterationKey = key;
+		resourceCache.iterationFunction = iterationFunc;
 	}
 
 	/**
@@ -97,14 +83,15 @@ export class ResourceCache implements OnLoad, OnTick {
 			return false;
 		}
 		let positionKey = positionToString(entity.position);
-		return Global.trackedResources.has(positionKey);
+		return GlobalTemp.resources.has(positionKey);
 	}
 
 	getEntity(positionKey: string): TrackingData | undefined {
-		if (positionKey === '' || Global.trackedResources.size === 0) {
+		// TODO make the .size static to improve performance
+		if (positionKey === '' || GlobalTemp.resources.size === 0) {
 			return undefined;
 		}
-		return Global.trackedResources.get(positionKey);
+		return GlobalTemp.resources.get(positionKey);
 	}
 }
 

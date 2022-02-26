@@ -1,12 +1,12 @@
-import { ForceData, GlobalState, PlayerData, ResourceTracker, TrackingData } from '../declarations/globalState';
+import { ForceData, GlobalSaveState, PlayerData, ResourceTracker, TrackingData } from '../declarations/global-save-state';
 import Log from '../lib/log';
 
-declare var global: GlobalState;
+declare var global: GlobalSaveState;
 
 export default class Global {
 	// region Getters
 
-	public static get GlobalData(): GlobalState {
+	public static get GlobalData(): GlobalSaveState {
 		if (!global) {
 			Log.errorAll('GlobalData was invalid!');
 		}
@@ -17,7 +17,7 @@ export default class Global {
 		return global.resourceTracker;
 	}
 
-	public static get trackedResources(): Map<string, TrackingData> {
+	public static get trackedResources(): { [name: string]: TrackingData; } {
 		return global.resourceTracker.trackedResources;
 	}
 
@@ -58,17 +58,13 @@ export default class Global {
 
 		if (!global['resourceTracker']) {
 			global['resourceTracker'] = {
-				trackedResources: new Map<string, TrackingData>(),
+				trackedResources: {},
 			};
 		}
 	}
 
 	public static setTrackedResources(key: string, value: TrackingData) {
-		global.resourceTracker.trackedResources.set(key, value);
-	}
-
-	public static loadTrackedResources(resources: Map<string, TrackingData>) {
-		global.resourceTracker.trackedResources = resources;
+		global.resourceTracker.trackedResources[key] = value;
 	}
 
 	// endregion

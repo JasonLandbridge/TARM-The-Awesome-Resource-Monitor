@@ -7,32 +7,23 @@ local ____global_2Ddata = require("data.global-data")
 local Global = ____global_2Ddata.default
 local ____settings_2Ddata = require("data.settings-data")
 local SettingsData = ____settings_2Ddata.default
+local ____global_2Dtemp_2Ddata = require("data.global-temp-data")
+local GlobalTemp = ____global_2Dtemp_2Ddata.default
 ____exports.ResourceCache = __TS__Class()
 local ResourceCache = ____exports.ResourceCache
 ResourceCache.name = "ResourceCache"
 function ResourceCache.prototype.____constructor(self)
 end
-function ResourceCache.prototype.OnLoad(self)
-    if Global.trackedResources.size == 0 then
-        return
-    end
-    local x = __TS__New(Map)
-    for ____, ____value in __TS__Iterator(Global.trackedResources) do
-        local key = ____value[1]
-        local trackingData = ____value[2]
-        x:set(key, trackingData)
-    end
-end
 function ResourceCache.prototype.OnTick(self, event)
-    local resourceTracker = Global.resourceTracker
-    if not resourceTracker or resourceTracker.trackedResources.size == 0 then
+    local resourceCache = GlobalTemp.resourceCache
+    if not resourceCache or resourceCache.resources.size == 0 then
         return
     end
-    if not resourceTracker.iterationFunction then
-        resourceTracker.iterationFunction = resourceTracker.trackedResources:entries()
+    if not resourceCache.iterationFunction then
+        resourceCache.iterationFunction = resourceCache.resources:entries()
     end
-    local key = resourceTracker.iterationKey
-    local iterationFunc = resourceTracker.iterationFunction
+    local key = resourceCache.iterationKey
+    local iterationFunc = resourceCache.iterationFunction
     do
         local i = 0
         while i < SettingsData.EntitiesPerTick do
@@ -40,8 +31,8 @@ function ResourceCache.prototype.OnTick(self, event)
             key = pair[1]
             local trackingData = pair[2]
             if not key then
-                Global.resourceTracker.iterationKey = nil
-                Global.resourceTracker.iterationFunction = nil
+                GlobalTemp.resourceCache.iterationKey = nil
+                GlobalTemp.resourceCache.iterationFunction = nil
                 return
             end
             if not trackingData.entity or not trackingData.entity.valid then
@@ -54,8 +45,8 @@ function ResourceCache.prototype.OnTick(self, event)
             i = i + 1
         end
     end
-    resourceTracker.iterationKey = key
-    resourceTracker.iterationFunction = iterationFunc
+    resourceCache.iterationKey = key
+    resourceCache.iterationFunction = iterationFunc
 end
 function ResourceCache.prototype.addEntity(self, entity)
     if not entity or not entity.valid or entity.type ~= "resource" then
@@ -78,13 +69,13 @@ function ResourceCache.prototype.hasEntity(self, entity)
         return false
     end
     local positionKey = positionToString(nil, entity.position)
-    return Global.trackedResources:has(positionKey)
+    return GlobalTemp.resources:has(positionKey)
 end
 function ResourceCache.prototype.getEntity(self, positionKey)
-    if positionKey == "" or Global.trackedResources.size == 0 then
+    if positionKey == "" or GlobalTemp.resources.size == 0 then
         return nil
     end
-    return Global.trackedResources:get(positionKey)
+    return GlobalTemp.resources:get(positionKey)
 end
 local resourceCache = __TS__New(____exports.ResourceCache)
 ____exports.default = resourceCache

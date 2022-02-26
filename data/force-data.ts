@@ -1,4 +1,4 @@
-import { ForceData, ResourceSite } from '../declarations/globalState';
+import { ForceData, ResourceSite } from '../declarations/global-save-state';
 import Global from './global-data';
 
 export function getForceData(forceName: string): ForceData | undefined {

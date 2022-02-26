@@ -23,9 +23,12 @@ local createResourceSite = ____resource_2Dtracker.createResourceSite
 local updatePlayers = ____resource_2Dtracker.updatePlayers
 local ____resource_2Dcache = require("lib.resource-cache")
 local ResourceCache = ____resource_2Dcache.default
+local ____global_2Dtemp_2Ddata = require("data.global-temp-data")
+local GlobalTemp = ____global_2Dtemp_2Ddata.default
 setup_gvv(nil)
 script.on_init(function()
     Global:OnInit()
+    GlobalTemp:OnInit()
     initPlayers(nil)
 end)
 script.on_configuration_changed(function()
@@ -33,7 +36,7 @@ script.on_configuration_changed(function()
     initPlayers(nil)
 end)
 script.on_load(function()
-    ResourceCache:OnLoad()
+    GlobalTemp:OnLoad()
 end)
 script.on_event(
     Events.OnTick,

@@ -3,7 +3,7 @@ import { getPlayer, getPlayers } from './game';
 import { getPlayerData, initPlayer } from '../data/player-data';
 import { addResourceSiteToForce, getForceData } from '../data/force-data';
 import ResourceCache from './resource-cache';
-import { PlayerData, ResourceSite } from '../declarations/globalState';
+import { PlayerData, ResourceSite } from '../declarations/global-save-state';
 import SettingsData from '../data/settings-data';
 import { Entity, General } from '../constants';
 import { findCenter, findResourceAt, getOctantName, shiftPosition } from './common';

@@ -7,21 +7,23 @@ import Global from './data/global-data';
 import { getPlayerData, initPlayer, initPlayers } from './data/player-data';
 import { addResource, clearCurrentSite, createResourceSite, updatePlayers } from './lib/resource-tracker';
 import ResourceCache from './lib/resource-cache';
+import GlobalTemp from './data/global-temp-data';
 
 setup_gvv();
 
 script.on_init(() => {
 	Global.OnInit();
-	initPlayers()
+	GlobalTemp.OnInit();
+	initPlayers();
 });
 
 script.on_configuration_changed(() => {
 	Global.OnInit();
 	initPlayers();
-})
+});
 
 script.on_load(() => {
-	ResourceCache.OnLoad();
+	GlobalTemp.OnLoad();
 });
 
 script.on_event(Events.OnTick, (event: OnTickEvent) => {

@@ -77,14 +77,11 @@ function Global.OnInit(self)
         end
     end
     if not global.resourceTracker then
-        global.resourceTracker = {trackedResources = __TS__New(Map)}
+        global.resourceTracker = {trackedResources = {}}
     end
 end
 function Global.setTrackedResources(self, key, value)
-    global.resourceTracker.trackedResources:set(key, value)
-end
-function Global.loadTrackedResources(self, resources)
-    global.resourceTracker.trackedResources = resources
+    global.resourceTracker.trackedResources[key] = value
 end
 ____exports.default = Global
 return ____exports

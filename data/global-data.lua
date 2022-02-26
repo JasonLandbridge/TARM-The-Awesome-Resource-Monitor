@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 2,["6"] = 2,["7"] = 6,["8"] = 6,["9"] = 6,["11"] = 6,["16"] = 10,["17"] = 11,["19"] = 13,["26"] = 17,["33"] = 21,["40"] = 25,["47"] = 29,["54"] = 33,["57"] = 39,["58"] = 40,["59"] = 41,["62"] = 45,["63"] = 46,["65"] = 49,["66"] = 50,["67"] = 51,["68"] = 51,["69"] = 51,["70"] = 51,["71"] = 51,["72"] = 51,["73"] = 51,["74"] = 51,["75"] = 51,["76"] = 52,["77"] = 53,["80"] = 59,["81"] = 60,["82"] = 60,["83"] = 60,["84"] = 60,["86"] = 39,["87"] = 67,["88"] = 68,["89"] = 67,["90"] = 6});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 2,["6"] = 2,["7"] = 6,["8"] = 6,["9"] = 6,["11"] = 6,["16"] = 10,["17"] = 11,["19"] = 13,["26"] = 17,["33"] = 21,["40"] = 25,["47"] = 29,["54"] = 33,["57"] = 39,["58"] = 40,["59"] = 41,["62"] = 45,["63"] = 46,["65"] = 49,["66"] = 50,["67"] = 51,["68"] = 51,["69"] = 51,["70"] = 51,["71"] = 51,["72"] = 51,["73"] = 51,["74"] = 51,["75"] = 51,["76"] = 52,["77"] = 53,["80"] = 59,["81"] = 60,["83"] = 39,["84"] = 6});
 local ____exports = {}
 local ____log = require("lib.log")
 local Log = ____log.default
@@ -78,14 +78,8 @@ function Global.OnInit(self)
         end
     end
     if not global.resourceTracker then
-        global.resourceTracker = {
-            trackedResources = __TS__New(Map),
-            positionCache = __TS__New(Map)
-        }
+        global.resourceTracker = {trackedResources = __TS__New(Map)}
     end
-end
-function Global.setPositionCache(self, key, value)
-    ____exports.default.resourceTracker.positionCache:set(key, value)
 end
 ____exports.default = Global
 return ____exports

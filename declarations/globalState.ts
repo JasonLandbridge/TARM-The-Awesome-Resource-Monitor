@@ -22,7 +22,6 @@ export interface ForceData {
 
 export interface ResourceTracker {
 	trackedResources: Map<string, TrackingData>;
-	positionCache: Map<string, number>;
 	iterationKey?: string;
 	iterationFunction?: IterableIterator<[string, TrackingData]>;
 }

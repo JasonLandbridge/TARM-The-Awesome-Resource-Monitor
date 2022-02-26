@@ -59,13 +59,8 @@ export default class Global {
 		if (!global['resourceTracker']) {
 			global['resourceTracker'] = {
 				trackedResources: new Map<string, TrackingData>(),
-				positionCache: new Map<string, number>(),
 			};
 		}
-	}
-
-	public static setPositionCache(key: string, value: number): void {
-		Global.resourceTracker.positionCache.set(key, value);
 	}
 
 	// endregion

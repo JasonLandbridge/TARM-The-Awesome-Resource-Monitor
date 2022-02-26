@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 14,["12"] = 15,["15"] = 18,["16"] = 20,["17"] = 25,["18"] = 26,["19"] = 28,["20"] = 36,["21"] = 37,["22"] = 38,["23"] = 40,["24"] = 41,["25"] = 42,["26"] = 44,["27"] = 45,["28"] = 46,["29"] = 47,["30"] = 48,["31"] = 51,["32"] = 51,["33"] = 51,["34"] = 51,["35"] = 51,["36"] = 51,["37"] = 51,["38"] = 60,["39"] = 63,["40"] = 64,["41"] = 65,["42"] = 66,["43"] = 67,["44"] = 68,["45"] = 68,["46"] = 68,["47"] = 68,["48"] = 68,["49"] = 68,["50"] = 68,["51"] = 68,["52"] = 68,["53"] = 77,["54"] = 78,["55"] = 79,["56"] = 80,["57"] = 83,["58"] = 89,["59"] = 90,["60"] = 91,["61"] = 96,["62"] = 104,["63"] = 105,["64"] = 14,["65"] = 108,["66"] = 109,["67"] = 110,["70"] = 114,["71"] = 116,["72"] = 117,["75"] = 121,["76"] = 123,["77"] = 124,["78"] = 126,["79"] = 127,["81"] = 108,["82"] = 5,["83"] = 6,["84"] = 7,["85"] = 8,["87"] = 10,["89"] = 5});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 14,["12"] = 15,["15"] = 18,["16"] = 20,["17"] = 25,["18"] = 26,["19"] = 28,["20"] = 36,["21"] = 37,["22"] = 38,["23"] = 40,["24"] = 41,["25"] = 42,["26"] = 44,["27"] = 45,["28"] = 46,["29"] = 47,["30"] = 48,["31"] = 51,["32"] = 59,["33"] = 62,["34"] = 63,["35"] = 64,["36"] = 65,["37"] = 66,["38"] = 67,["39"] = 67,["40"] = 67,["41"] = 67,["42"] = 67,["43"] = 67,["44"] = 67,["45"] = 67,["46"] = 75,["47"] = 76,["48"] = 77,["49"] = 78,["50"] = 81,["51"] = 86,["52"] = 87,["53"] = 88,["54"] = 93,["55"] = 100,["56"] = 101,["57"] = 14,["58"] = 104,["59"] = 105,["60"] = 106,["63"] = 110,["64"] = 112,["65"] = 113,["68"] = 117,["69"] = 119,["70"] = 120,["71"] = 122,["72"] = 123,["74"] = 104,["75"] = 5,["76"] = 6,["77"] = 7,["78"] = 8,["80"] = 10,["82"] = 5});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -28,13 +28,7 @@ function ____exports.buildInterface(self, player)
     titleTable.style.horizontally_stretchable = true
     titleTable.style.column_alignments[1] = "left"
     titleTable.style.column_alignments[2] = "right"
-    local title_frame = titleTable.add({
-        type = "frame",
-        name = "title_frame",
-        caption = "space-exploration.zonelist-window-title",
-        style = "informatron_title_frame",
-        ignored_by_interaction = true
-    })
+    local title_frame = titleTable.add({type = "frame", name = "title_frame", caption = "space-exploration.zonelist-window-title", ignored_by_interaction = true})
     local filter_search_container = titleTable.add({type = "flow", name = "filter_search_flow", direction = "horizontal"})
     local zoneListSearch = filter_search_container.add({type = "textfield", name = "Zonelist.name_zonelist_search"})
     zoneListSearch.style.width = 150
@@ -47,18 +41,17 @@ function ____exports.buildInterface(self, player)
         sprite = "se-search-close-white",
         hovered_sprite = "se-search-close-black",
         clicked_sprite = "se-search-close-black",
-        tooltip = "space-exploration.clear-search",
-        style = "informatron_close_button"
+        tooltip = "space-exploration.clear-search"
     })
     searchButton.style.left_margin = 5
     searchButton.style.height = 28
     searchButton.style.width = 28
     searchButton.style.top_margin = -2
-    local zoneListFrame = mainLeftFlow.add({type = "frame", name = "zonelist_frame", style = "informatron_inside_deep_frame", direction = "vertical"})
+    local zoneListFrame = mainLeftFlow.add({type = "frame", name = "zonelist_frame", direction = "vertical"})
     zoneListFrame.style.horizontally_stretchable = true
     zoneListFrame.style.minimal_height = 300
     local zoneListHeadingsRow = zoneListFrame.add({type = "flow", name = "Zonelist.name_zonelist_headings_row", direction = "horizontal"})
-    local zoneListScroll = zoneListFrame.add({type = "scroll-pane", name = "Zonelist.name_zonelist_scroll", style = "zonelist_rows_pane"})
+    local zoneListScroll = zoneListFrame.add({type = "scroll-pane", name = "Zonelist.name_zonelist_scroll"})
     player.opened = main_frame
     ____exports.updateHud(nil, player.index, zoneListScroll)
 end
@@ -75,8 +68,8 @@ function ____exports.updateHud(self, playerIndex, parent)
     for ____, resourceSite in ipairs(forceData.resourceSites) do
         local row = parent.add({type = "button", name = resourceSite.name})
         local row_flow = row.add({type = "flow", name = "row_flow", direction = "horizontal", ignored_by_interaction = true})
-        row_flow.add({type = "label", name = "cell_name", caption = resourceSite.name, style = "se_zonelist_cell_name"})
-        row_flow.add({type = "label", name = "cell_type", caption = resourceSite.amount, style = "se_zonelist_cell_type"})
+        row_flow.add({type = "label", name = "cell_name", caption = resourceSite.name})
+        row_flow.add({type = "label", name = "cell_type", caption = resourceSite.amount})
     end
 end
 function ____exports.toggleInterface(self, player)

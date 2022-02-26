@@ -52,7 +52,6 @@ export function buildInterface(player: LuaPlayer) {
 		type: 'frame',
 		name: 'title_frame',
 		caption: 'space-exploration.zonelist-window-title',
-		style: 'informatron_title_frame',
 		ignored_by_interaction: true,
 	});
 
@@ -72,7 +71,6 @@ export function buildInterface(player: LuaPlayer) {
 		hovered_sprite: 'se-search-close-black',
 		clicked_sprite: 'se-search-close-black',
 		tooltip: 'space-exploration.clear-search',
-		style: 'informatron_close_button',
 	});
 	searchButton.style.left_margin = 5;
 	searchButton.style.height = 28;
@@ -83,7 +81,6 @@ export function buildInterface(player: LuaPlayer) {
 	let zoneListFrame = mainLeftFlow.add({
 		type: 'frame',
 		name: 'zonelist_frame',
-		style: 'informatron_inside_deep_frame',
 		direction: 'vertical',
 	});
 	zoneListFrame.style.horizontally_stretchable = true;
@@ -97,7 +94,6 @@ export function buildInterface(player: LuaPlayer) {
 		type: 'scroll-pane',
 		name: 'Zonelist.name_zonelist_scroll',
 		// direction: 'vertical',
-		style: 'zonelist_rows_pane',
 	});
 
 	// Set to player
@@ -123,7 +119,7 @@ export function updateHud(playerIndex: number, parent: LuaGuiElement) {
 		let row = parent.add({ type: 'button', name: resourceSite.name }); // style: (zone == playerdata.zonelist_selected_zone and "zonelist_row_button_selected" or "zonelist_row_button")}
 		let row_flow = row.add({ type: 'flow', name: 'row_flow', direction: 'horizontal', ignored_by_interaction: true });
 
-		row_flow.add({ type: 'label', name: 'cell_name', caption: resourceSite.name, style: 'se_zonelist_cell_name' });
-		row_flow.add({ type: 'label', name: 'cell_type', caption: resourceSite.amount, style: 'se_zonelist_cell_type' });
+		row_flow.add({ type: 'label', name: 'cell_name', caption: resourceSite.name });
+		row_flow.add({ type: 'label', name: 'cell_type', caption: resourceSite.amount });
 	}
 }

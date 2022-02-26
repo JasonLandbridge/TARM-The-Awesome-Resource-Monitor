@@ -3,19 +3,21 @@ import Events from './constants/events';
 import { toggleInterface } from './gui/main-hud';
 import { Entity } from './constants';
 import { setup_gvv } from './lib/debug';
-import { setupGlobalData } from './data/global-data';
-import { getPlayerData, initPlayer } from './data/player-data';
+import Global from './data/global-data';
+import { getPlayerData, initPlayer, initPlayers } from './data/player-data';
 import { addResource, clearCurrentSite, createResourceSite, updatePlayers } from './lib/resource-tracker';
 import ResourceCache from './lib/resource-cache';
 
 setup_gvv();
 
 script.on_init(() => {
-	setupGlobalData();
+	Global.OnInit();
+	initPlayers()
 });
 
 script.on_configuration_changed(() => {
-	setupGlobalData();
+	Global.OnInit();
+	initPlayers();
 })
 
 script.on_load(() => {

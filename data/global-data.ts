@@ -1,55 +1,72 @@
-import { initPlayer } from './player-data';
-import { getPlayers } from '../lib/game';
-import { Global, ResourceTracker, TrackingData } from '../declarations/global';
+import { ForceData, GlobalState, PlayerData, ResourceTracker, TrackingData } from '../declarations/globalState';
 import Log from '../lib/log';
 
-export function setupGlobalData() {
-	if (!GlobalData) {
-		Log.debugAll('setupGlobalData => Setting up GlobalData');
-		GlobalData = {
-			playerData: [],
-			forceData: {},
-			resourceTracker: {
-				trackedEntities: new Map<string, TrackingData>(),
+declare var global: GlobalState;
+
+export default class Global {
+	// region Getters
+
+	public static get GlobalData(): GlobalState {
+		if (!global) {
+			Log.errorAll('GlobalData was invalid!');
+		}
+		return global;
+	}
+
+	public static get resourceTracker(): ResourceTracker {
+		return global.resourceTracker;
+	}
+
+	public static get trackedEntities(): Map<string, TrackingData> {
+		return this.resourceTracker.trackedResources;
+	}
+
+	public static get forceData(): { [name: string]: ForceData } {
+		return global.forceData;
+	}
+
+	public static get playerData(): PlayerData[] {
+		return global.playerData;
+	}
+
+	public static get valid(): Boolean {
+		return !!global;
+	}
+
+	// endregion
+	// region Methods
+
+	public static OnInit(): void {
+		if (!Global.valid) {
+			Log.errorAll('Global.OnInit() => Global was invalid and could not be filled with data');
+			return;
+		}
+
+		if (!global['playerData']) {
+			global['playerData'] = [];
+		}
+
+		if (!global['forceData']) {
+			global['forceData'] = {};
+			let forces = ['player', 'enemy', 'neutral', 'conquest', 'ignore', 'capture', 'friendly'];
+			for (const force of forces) {
+				global.forceData[force] = {
+					resourceSites: [],
+				};
+			}
+		}
+
+		if (!global['resourceTracker']) {
+			global['resourceTracker'] = {
+				trackedResources: new Map<string, TrackingData>(),
 				positionCache: new Map<string, number>(),
-			},
-		};
-	}
-
-	if (!GlobalData['playerData']) {
-		GlobalData['playerData'] = [];
-	}
-
-	if (!GlobalData['forceData']) {
-		GlobalData['forceData'] = {};
-		let forces = ['player', 'enemy', 'neutral', 'conquest', 'ignore', 'capture', 'friendly'];
-		for (const force of forces) {
-			GlobalData.forceData[force] = {
-				resourceSites: [],
 			};
 		}
 	}
 
-	if (!GlobalData['resourceTracker']) {
-		GlobalData['resourceTracker'] = { trackedEntities: new Map<string, TrackingData>(), positionCache: new Map<string, number>() };
+	public static setPositionCache(key: string, value: number): void {
+		Global.resourceTracker.positionCache.set(key, value);
 	}
 
-	getPlayers().forEach((value, index) => {
-		initPlayer(index);
-	});
-}
-
-/*export function getGlobalData(): Global | undefined {
-	if (!GlobalData) {
-		Log.errorAll('GlobalData was invalid!');
-	}
-	return GlobalData;
-}*/
-
-export function getTrackingData(): Map<string, TrackingData> {
-	return GlobalData?.resourceTracker?.trackedEntities ?? new Map<string, TrackingData>();
-}
-
-export function getResourceTracker(): ResourceTracker | undefined {
-	return GlobalData?.resourceTracker ?? undefined;
+	// endregion
 }

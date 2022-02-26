@@ -25,10 +25,18 @@ export default class Log {
 	}
 	// endregion
 
+	// region Debug
 	public static warn(playerIndex: number, message: string) {
 		// yellow color
 		getPlayer(playerIndex)?.print(`[WARN]: ${message}`, { r: 255, g: 204, b: 0 });
 	}
+
+	public static warnAll(message: string) {
+		for (const player of getPlayers()) {
+			this.warn(player.index, message);
+		}
+	}
+	// endregion
 
 	// region Error
 

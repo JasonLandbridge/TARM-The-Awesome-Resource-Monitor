@@ -1,6 +1,6 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 7,["20"] = 8,["21"] = 8,["22"] = 8,["23"] = 8,["24"] = 8,["25"] = 9,["26"] = 9,["27"] = 11,["28"] = 13,["29"] = 14,["30"] = 13,["31"] = 17,["32"] = 18,["33"] = 17,["34"] = 21,["35"] = 22,["36"] = 21,["37"] = 25,["38"] = 25,["39"] = 25,["40"] = 26,["41"] = 27,["42"] = 25,["43"] = 25,["44"] = 30,["45"] = 30,["46"] = 30,["47"] = 31,["48"] = 32,["49"] = 33,["50"] = 34,["53"] = 30,["54"] = 30,["55"] = 39,["56"] = 39,["57"] = 39,["58"] = 40,["59"] = 41,["60"] = 42,["62"] = 39,["63"] = 39,["64"] = 46,["65"] = 46,["66"] = 46,["67"] = 47,["70"] = 51,["71"] = 52,["74"] = 57,["75"] = 58,["77"] = 60,["79"] = 63,["80"] = 64,["81"] = 65,["84"] = 46,["85"] = 46,["86"] = 70,["87"] = 70,["88"] = 70,["89"] = 71,["90"] = 70,["91"] = 70});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 5,["15"] = 6,["16"] = 6,["17"] = 7,["18"] = 7,["19"] = 7,["20"] = 7,["21"] = 8,["22"] = 8,["23"] = 8,["24"] = 8,["25"] = 8,["26"] = 9,["27"] = 9,["28"] = 11,["29"] = 13,["30"] = 14,["31"] = 15,["32"] = 13,["33"] = 18,["34"] = 19,["35"] = 20,["36"] = 18,["37"] = 23,["38"] = 24,["39"] = 23,["40"] = 27,["41"] = 27,["42"] = 27,["43"] = 28,["44"] = 29,["45"] = 27,["46"] = 27,["47"] = 32,["48"] = 32,["49"] = 32,["50"] = 33,["51"] = 34,["52"] = 35,["53"] = 36,["56"] = 32,["57"] = 32,["58"] = 41,["59"] = 41,["60"] = 41,["61"] = 42,["62"] = 43,["63"] = 44,["65"] = 41,["66"] = 41,["67"] = 48,["68"] = 48,["69"] = 48,["70"] = 49,["73"] = 53,["74"] = 54,["77"] = 59,["78"] = 60,["80"] = 62,["82"] = 65,["83"] = 66,["84"] = 67,["87"] = 48,["88"] = 48,["89"] = 72,["90"] = 72,["91"] = 72,["92"] = 73,["93"] = 72,["94"] = 72});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -13,10 +13,11 @@ local Entity = ____constants.Entity
 local ____debug = require("lib.debug")
 local setup_gvv = ____debug.setup_gvv
 local ____global_2Ddata = require("data.global-data")
-local setupGlobalData = ____global_2Ddata.setupGlobalData
+local Global = ____global_2Ddata.default
 local ____player_2Ddata = require("data.player-data")
 local getPlayerData = ____player_2Ddata.getPlayerData
 local initPlayer = ____player_2Ddata.initPlayer
+local initPlayers = ____player_2Ddata.initPlayers
 local ____resource_2Dtracker = require("lib.resource-tracker")
 local addResource = ____resource_2Dtracker.addResource
 local clearCurrentSite = ____resource_2Dtracker.clearCurrentSite
@@ -26,10 +27,12 @@ local ____resource_2Dcache = require("lib.resource-cache")
 local ResourceCache = ____resource_2Dcache.default
 setup_gvv(nil)
 script.on_init(function()
-    setupGlobalData(nil)
+    Global:OnInit()
+    initPlayers(nil)
 end)
 script.on_configuration_changed(function()
-    setupGlobalData(nil)
+    Global:OnInit()
+    initPlayers(nil)
 end)
 script.on_load(function()
     ResourceCache:OnLoad()

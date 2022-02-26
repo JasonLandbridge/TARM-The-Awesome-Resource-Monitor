@@ -1,5 +1,5 @@
 import { General } from '../constants';
-import { Extend } from '../declarations/global';
+import { Extend } from '../declarations/globalState';
 
 /**
  * Scale it up so (hopefully) any floating point components disappears,

@@ -1,6 +1,6 @@
-declare let globalData: Global;
+declare let globalData: GlobalState;
 
-export interface Global {
+export interface GlobalState {
 	playerData: PlayerData[];
 	forceData: { [name: string]: ForceData };
 	resourceTracker: ResourceTracker;
@@ -21,7 +21,7 @@ export interface ForceData {
 }
 
 export interface ResourceTracker {
-	trackedEntities: Map<string, TrackingData>;
+	trackedResources: Map<string, TrackingData>;
 	positionCache: Map<string, number>;
 	iterationKey?: string;
 	iterationFunction?: IterableIterator<[string, TrackingData]>;

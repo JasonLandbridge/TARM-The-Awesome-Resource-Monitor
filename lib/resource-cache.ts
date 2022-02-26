@@ -1,26 +1,30 @@
 import { positionToString } from './common';
-import { TrackingData } from '../declarations/global';
-import { getResourceTracker, getTrackingData } from '../data/global-data';
-import IEvent from '../typings/base-class';
+import { TrackingData } from '../declarations/globalState';
+import Global from '../data/global-data';
+import { OnLoad, OnTick } from '../typings/IEvent';
 import SettingsData from '../data/settings-data';
 
-export class ResourceCache implements IEvent {
+export class ResourceCache implements OnLoad, OnTick {
 	OnLoad(): void {
-		let resourceTracker = getResourceTracker();
-		let entities = getTrackingData();
-		if (!resourceTracker || entities.size === 0) {
-			return;
-		}
+		// let resourceTracker = getResourceTracker();
+		// let entities = getTrackingData();
+		// if (!resourceTracker || entities.size === 0) {
+		// 	return;
+		// }
+		//
+		// for (const [key, trackingData] of entities) {
+		// 	Global.setPositionCache(key, trackingData);
+		// }
 	}
 
 	OnTick(event: OnTickEvent): void {
-		let resourceTracker = getResourceTracker();
-		if (!resourceTracker || resourceTracker.trackedEntities.size === 0) {
+		let resourceTracker = Global.resourceTracker;
+		if (!resourceTracker || resourceTracker.trackedResources.size === 0) {
 			return;
 		}
 
 		if (!resourceTracker.iterationFunction) {
-			resourceTracker.iterationFunction = resourceTracker.trackedEntities.entries();
+			resourceTracker.iterationFunction = resourceTracker.trackedResources.entries();
 		}
 
 		// Update all trackedEntities with the latest resource amount
@@ -31,8 +35,8 @@ export class ResourceCache implements IEvent {
 			key = pair[0];
 			let trackingData = pair[1];
 			if (!key) {
-				GlobalData.resourceTracker.iterationKey = undefined;
-				GlobalData.resourceTracker.iterationFunction = undefined;
+				Global.resourceTracker.iterationKey = undefined;
+				Global.resourceTracker.iterationFunction = undefined;
 				return;
 			}
 
@@ -77,7 +81,7 @@ export class ResourceCache implements IEvent {
 		// Otherwise, create the tracking data and store it, including position_cache
 		// TODO this should not all be in one huge array, can be split up
 
-		GlobalData.resourceTracker.trackedEntities.set(positionKey, {
+		Global.resourceTracker.trackedResources.set(positionKey, {
 			entity: entity,
 			valid: entity.valid,
 			position: entity.position,
@@ -92,14 +96,14 @@ export class ResourceCache implements IEvent {
 			return false;
 		}
 		let positionKey = positionToString(entity.position);
-		return GlobalData.resourceTracker.trackedEntities.has(positionKey);
+		return Global.resourceTracker.trackedResources.has(positionKey);
 	}
 
 	getEntity(positionKey: string): TrackingData | undefined {
 		if (positionKey === '') {
 			return undefined;
 		}
-		return GlobalData.resourceTracker.trackedEntities.get(positionKey);
+		return Global.resourceTracker.trackedResources.get(positionKey);
 	}
 }
 

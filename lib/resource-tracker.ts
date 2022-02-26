@@ -3,11 +3,12 @@ import { getPlayer, getPlayers } from './game';
 import { getPlayerData, initPlayer } from '../data/player-data';
 import { addResourceSiteToForce, getForceData } from '../data/force-data';
 import ResourceCache from './resource-cache';
-import { PlayerData, ResourceSite } from '../declarations/global';
+import { PlayerData, ResourceSite } from '../declarations/globalState';
 import SettingsData from '../data/settings-data';
 import { Entity, General } from '../constants';
 import { findCenter, findResourceAt, getOctantName, shiftPosition } from './common';
 import { distance } from 'util';
+import Global from '../data/global-data';
 
 /**
  *
@@ -268,7 +269,8 @@ export function finalizeResourceSite(playerIndex: number) {
 function countDeposits(resourceSite: ResourceSite, updateCycle: number) {}
 
 export function updatePlayers(event: EventData) {
-	if (!GlobalData || !GlobalData.playerData) {
+	if (!Global.valid || !Global.playerData) {
+		Log.warnAll(`updatePlayers() => Either Global or Global.playerData was invalid`)
 		return;
 	}
 

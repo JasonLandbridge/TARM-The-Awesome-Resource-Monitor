@@ -1,5 +1,4 @@
 import HUD from '../constants/hud';
-import General from '../constants/general';
 import { getPlayer } from '../lib/game';
 import { getForceData } from '../data/force-data';
 

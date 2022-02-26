@@ -1,7 +1,8 @@
-import { getPlayer } from '../lib/game';
-import { ForceData, PlayerData } from '../declarations/global';
+import { getPlayer, getPlayers } from '../lib/game';
+import { ForceData, PlayerData } from '../declarations/globalState';
 import { getForceData } from './force-data';
 import Log from '../lib/log';
+import Global from './global-data';
 
 export function initPlayer(playerIndex: number): void {
 	let player = getPlayer(playerIndex);
@@ -10,29 +11,33 @@ export function initPlayer(playerIndex: number): void {
 	}
 	initForce(player.force);
 	if (!getPlayerData(playerIndex)) {
-		GlobalData.playerData.push({ overlays: [], index: playerIndex, guiUpdateTicks: 60, currentSite: undefined });
+		Global.GlobalData.playerData.push({ overlays: [], index: playerIndex, guiUpdateTicks: 60, currentSite: undefined });
 	}
+}
+
+export function initPlayers() {
+	getPlayers().forEach((value, index) => {
+		initPlayer(index);
+	});
 }
 
 /**
  * Creates a new force, Player, Neutral or Enemy
  * @param force
  */
-export function initForce(force: LuaForce) : ForceData | undefined {
+export function initForce(force: LuaForce): ForceData | undefined {
 	let force_data = getForceData(force.name);
 	if (!force_data) {
-		if (!GlobalData){
-			Log.errorAll('initForce => Could not initForce due to GlobalData being invalid')
+		if (!Global.valid) {
+			Log.errorAll('initForce => Could not initForce due to GlobalData being invalid');
 			return undefined;
 		}
-		GlobalData.forceData[force.name] = { resourceSites: [] };
-		return GlobalData.forceData[force.name];
+		Global.forceData[force.name] = { resourceSites: [] };
+		return Global.forceData[force.name];
 	}
 	return force_data;
 }
 
 export function getPlayerData(playerIndex: number): PlayerData | undefined {
-	return GlobalData?.playerData.find((x) => x.index === playerIndex) ?? undefined;
+	return Global.playerData.find((x) => x.index === playerIndex) ?? undefined;
 }
-
-

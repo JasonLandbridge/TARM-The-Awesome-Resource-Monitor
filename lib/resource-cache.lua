@@ -1,6 +1,5 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 3,["8"] = 3,["9"] = 5,["10"] = 5,["11"] = 7,["12"] = 7,["13"] = 7,["15"] = 7,["16"] = 8,["17"] = 8,["18"] = 20,["19"] = 21,["20"] = 22,["23"] = 26,["24"] = 27,["26"] = 31,["27"] = 32,["29"] = 33,["30"] = 33,["31"] = 34,["32"] = 35,["33"] = 36,["34"] = 37,["35"] = 38,["36"] = 39,["39"] = 43,["40"] = 44,["41"] = 45,["42"] = 46,["44"] = 48,["46"] = 33,["49"] = 51,["50"] = 52,["51"] = 20,["52"] = 62,["53"] = 63,["54"] = 64,["56"] = 67,["57"] = 68,["58"] = 69,["59"] = 73,["60"] = 74,["61"] = 75,["62"] = 76,["63"] = 78,["65"] = 84,["66"] = 91,["67"] = 62,["68"] = 94,["69"] = 95,["70"] = 96,["72"] = 98,["73"] = 99,["74"] = 94,["75"] = 102,["76"] = 103,["77"] = 104,["79"] = 106,["80"] = 102,["81"] = 110,["82"] = 111});
 local ____exports = {}
 local ____common = require("lib.common")
 local positionToString = ____common.positionToString
@@ -14,6 +13,15 @@ ResourceCache.name = "ResourceCache"
 function ResourceCache.prototype.____constructor(self)
 end
 function ResourceCache.prototype.OnLoad(self)
+    if Global.trackedResources.size == 0 then
+        return
+    end
+    local x = __TS__New(Map)
+    for ____, ____value in __TS__Iterator(Global.trackedResources) do
+        local key = ____value[1]
+        local trackingData = ____value[2]
+        x:set(key, trackingData)
+    end
 end
 function ResourceCache.prototype.OnTick(self, event)
     local resourceTracker = Global.resourceTracker
@@ -62,7 +70,7 @@ function ResourceCache.prototype.addEntity(self, entity)
         trackingData.resourceAmount = entity.amount
         return positionKey
     end
-    Global.resourceTracker.trackedResources:set(positionKey, {entity = entity, valid = entity.valid, position = entity.position, resourceAmount = entity.amount})
+    Global:setTrackedResources(positionKey, {entity = entity, valid = entity.valid, position = entity.position, resourceAmount = entity.amount})
     return positionKey
 end
 function ResourceCache.prototype.hasEntity(self, entity)
@@ -70,13 +78,13 @@ function ResourceCache.prototype.hasEntity(self, entity)
         return false
     end
     local positionKey = positionToString(nil, entity.position)
-    return Global.resourceTracker.trackedResources:has(positionKey)
+    return Global.trackedResources:has(positionKey)
 end
 function ResourceCache.prototype.getEntity(self, positionKey)
-    if positionKey == "" then
+    if positionKey == "" or Global.trackedResources.size == 0 then
         return nil
     end
-    return Global.resourceTracker.trackedResources:get(positionKey)
+    return Global.trackedResources:get(positionKey)
 end
 local resourceCache = __TS__New(____exports.ResourceCache)
 ____exports.default = resourceCache

@@ -1,6 +1,7 @@
 import HUD from '../constants/hud';
 import { getPlayer } from '../lib/game';
 import { getForceData } from '../data/force-data';
+import Graphics from '../constants/graphics';
 
 export function toggleInterface(player: LuaPlayer) {
 	let main_frame = player.gui.screen[HUD.MainFrame] as LuaGuiElement;
@@ -67,9 +68,9 @@ export function buildInterface(player: LuaPlayer) {
 	let searchButton = filter_search_container.add({
 		type: 'sprite-button',
 		name: 'Zonelist.name_zonelist_search_clear',
-		sprite: 'se-search-close-white',
-		hovered_sprite: 'se-search-close-black',
-		clicked_sprite: 'se-search-close-black',
+		sprite: Graphics.SearchCloseWhite,
+		hovered_sprite: Graphics.SearchCloseBlack,
+		clicked_sprite: Graphics.SearchCloseBlack,
 		tooltip: 'space-exploration.clear-search',
 	});
 	searchButton.style.left_margin = 5;

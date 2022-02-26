@@ -17,8 +17,8 @@ export default class Global {
 		return global.resourceTracker;
 	}
 
-	public static get trackedEntities(): Map<string, TrackingData> {
-		return this.resourceTracker.trackedResources;
+	public static get trackedResources(): Map<string, TrackingData> {
+		return global.resourceTracker.trackedResources;
 	}
 
 	public static get forceData(): { [name: string]: ForceData } {
@@ -38,7 +38,7 @@ export default class Global {
 
 	public static OnInit(): void {
 		if (!Global.valid) {
-			Log.errorAll('Global.OnInit() => Global was invalid and could not be filled with data');
+			Log.errorAll('Global.OnInit() => Global was invalid and could not be filled with mod data');
 			return;
 		}
 
@@ -61,6 +61,14 @@ export default class Global {
 				trackedResources: new Map<string, TrackingData>(),
 			};
 		}
+	}
+
+	public static setTrackedResources(key: string, value: TrackingData) {
+		global.resourceTracker.trackedResources.set(key, value);
+	}
+
+	public static loadTrackedResources(resources: Map<string, TrackingData>) {
+		global.resourceTracker.trackedResources = resources;
 	}
 
 	// endregion

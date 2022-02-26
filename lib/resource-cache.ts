@@ -3,18 +3,22 @@ import { TrackingData } from '../declarations/globalState';
 import Global from '../data/global-data';
 import { OnLoad, OnTick } from '../typings/IEvent';
 import SettingsData from '../data/settings-data';
+import Log from './log';
 
 export class ResourceCache implements OnLoad, OnTick {
 	OnLoad(): void {
-		// let resourceTracker = getResourceTracker();
-		// let entities = getTrackingData();
-		// if (!resourceTracker || entities.size === 0) {
-		// 	return;
-		// }
-		//
-		// for (const [key, trackingData] of entities) {
-		// 	Global.setPositionCache(key, trackingData);
-		// }
+		if (Global.trackedResources.size === 0) {
+			return;
+		}
+
+		// Factorio saves the trackedResources as json,
+		// which need to be converted to a valid Map<string, TrackingData> on load
+		let x: Map<string, TrackingData> = new Map<string, TrackingData>();
+		for (const [key, trackingData] of Global.trackedResources) {
+			x.set(key, trackingData);
+		}
+
+		// Global.loadTrackedResources(x);
 	}
 
 	OnTick(event: OnTickEvent): void {
@@ -79,15 +83,12 @@ export class ResourceCache implements OnLoad, OnTick {
 		}
 
 		// Otherwise, create the tracking data and store it, including position_cache
-		// TODO this should not all be in one huge array, can be split up
-
-		Global.resourceTracker.trackedResources.set(positionKey, {
+		Global.setTrackedResources(positionKey, {
 			entity: entity,
 			valid: entity.valid,
 			position: entity.position,
 			resourceAmount: entity.amount,
 		});
-
 		return positionKey;
 	}
 
@@ -96,14 +97,14 @@ export class ResourceCache implements OnLoad, OnTick {
 			return false;
 		}
 		let positionKey = positionToString(entity.position);
-		return Global.resourceTracker.trackedResources.has(positionKey);
+		return Global.trackedResources.has(positionKey);
 	}
 
 	getEntity(positionKey: string): TrackingData | undefined {
-		if (positionKey === '') {
+		if (positionKey === '' || Global.trackedResources.size === 0) {
 			return undefined;
 		}
-		return Global.resourceTracker.trackedResources.get(positionKey);
+		return Global.trackedResources.get(positionKey);
 	}
 }
 

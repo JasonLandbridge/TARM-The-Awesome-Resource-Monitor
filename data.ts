@@ -1,6 +1,7 @@
 import { Data } from 'typed-factorio/data/types';
 import { Events, General, Paths } from 'constants';
 import { Entity } from './constants';
+import Graphics from './constants/graphics';
 
 declare const data: Data;
 
@@ -92,7 +93,7 @@ data.extend([
 	},
 	{
 		type: 'sprite',
-		name: General.Prefix + 'search-black',
+		name: Graphics.SearchBlack,
 		filename: Paths.IconGraphics('search-black.png'),
 		priority: 'extra-high',
 		width: 64,
@@ -101,7 +102,7 @@ data.extend([
 	},
 	{
 		type: 'sprite',
-		name: General.Prefix + 'search-white',
+		name: Graphics.SearchWhite,
 		filename: Paths.IconGraphics('search-white.png'),
 		priority: 'extra-high',
 		width: 64,
@@ -110,7 +111,7 @@ data.extend([
 	},
 	{
 		type: 'sprite',
-		name: General.Prefix + 'search-close-black',
+		name: Graphics.SearchCloseBlack,
 		filename: Paths.IconGraphics('search-close-black.png'),
 		priority: 'extra-high',
 		width: 64,
@@ -119,7 +120,7 @@ data.extend([
 	},
 	{
 		type: 'sprite',
-		name: General.Prefix + 'search-close-white',
+		name: Graphics.SearchCloseWhite,
 		filename: Paths.IconGraphics('search-close-white.png'),
 		priority: 'extra-high',
 		width: 64,

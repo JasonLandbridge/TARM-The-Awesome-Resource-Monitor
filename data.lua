@@ -1,6 +1,4 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 2,["6"] = 2,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 7,["12"] = 7,["13"] = 16,["14"] = 16,["15"] = 16,["16"] = 16,["17"] = 16,["18"] = 16,["19"] = 16,["20"] = 23,["21"] = 23,["22"] = 23,["23"] = 23,["24"] = 23,["25"] = 23,["26"] = 16,["27"] = 30,["28"] = 30,["29"] = 30,["30"] = 30,["31"] = 30,["32"] = 30,["33"] = 16,["34"] = 37,["35"] = 37,["36"] = 37,["37"] = 37,["38"] = 37,["39"] = 37,["40"] = 16,["41"] = 7,["42"] = 46,["43"] = 46,["44"] = 46,["45"] = 46,["46"] = 46,["47"] = 46,["48"] = 46,["49"] = 46,["50"] = 46,["51"] = 46,["52"] = 46,["53"] = 46,["54"] = 46,["55"] = 46,["56"] = 46,["57"] = 46,["58"] = 7,["59"] = 64,["60"] = 64,["61"] = 64,["62"] = 64,["63"] = 64,["64"] = 64,["65"] = 64,["66"] = 64,["67"] = 64,["68"] = 64,["69"] = 64,["70"] = 64,["71"] = 85,["72"] = 85,["73"] = 85,["74"] = 85,["75"] = 85,["76"] = 85,["77"] = 64,["78"] = 7,["79"] = 93,["80"] = 93,["81"] = 93,["82"] = 93,["83"] = 93,["84"] = 93,["85"] = 93,["86"] = 93,["87"] = 7,["88"] = 102,["89"] = 102,["90"] = 102,["91"] = 102,["92"] = 102,["93"] = 102,["94"] = 102,["95"] = 102,["96"] = 7,["97"] = 111,["98"] = 111,["99"] = 111,["100"] = 111,["101"] = 111,["102"] = 111,["103"] = 111,["104"] = 111,["105"] = 7,["106"] = 120,["107"] = 120,["108"] = 120,["109"] = 120,["110"] = 120,["111"] = 120,["112"] = 120,["113"] = 120,["114"] = 7,["115"] = 7});
 local ____exports = {}
 local ____constants = require("constants.index")
 local Events = ____constants.Events
@@ -8,6 +6,8 @@ local General = ____constants.General
 local Paths = ____constants.Paths
 local ____constants = require("constants.index")
 local Entity = ____constants.Entity
+local ____graphics = require("constants.graphics")
+local Graphics = ____graphics.default
 data:extend({
     {type = "custom-input", name = Events.Toggle_Interface, key_sequence = "F", order = "a"},
     {
@@ -78,7 +78,7 @@ data:extend({
     },
     {
         type = "sprite",
-        name = General.Prefix .. "search-black",
+        name = Graphics.SearchBlack,
         filename = Paths:IconGraphics("search-black.png"),
         priority = "extra-high",
         width = 64,
@@ -87,7 +87,7 @@ data:extend({
     },
     {
         type = "sprite",
-        name = General.Prefix .. "search-white",
+        name = Graphics.SearchWhite,
         filename = Paths:IconGraphics("search-white.png"),
         priority = "extra-high",
         width = 64,
@@ -96,7 +96,7 @@ data:extend({
     },
     {
         type = "sprite",
-        name = General.Prefix .. "search-close-black",
+        name = Graphics.SearchCloseBlack,
         filename = Paths:IconGraphics("search-close-black.png"),
         priority = "extra-high",
         width = 64,
@@ -105,7 +105,7 @@ data:extend({
     },
     {
         type = "sprite",
-        name = General.Prefix .. "search-close-white",
+        name = Graphics.SearchCloseWhite,
         filename = Paths:IconGraphics("search-close-white.png"),
         priority = "extra-high",
         width = 64,

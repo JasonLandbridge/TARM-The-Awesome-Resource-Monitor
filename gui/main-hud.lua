@@ -1,6 +1,4 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-require("lualib_bundle");
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["5"] = 1,["6"] = 1,["7"] = 2,["8"] = 2,["9"] = 3,["10"] = 3,["11"] = 14,["12"] = 15,["15"] = 18,["16"] = 20,["17"] = 25,["18"] = 26,["19"] = 28,["20"] = 36,["21"] = 37,["22"] = 38,["23"] = 40,["24"] = 41,["25"] = 42,["26"] = 44,["27"] = 45,["28"] = 46,["29"] = 47,["30"] = 48,["31"] = 51,["32"] = 59,["33"] = 62,["34"] = 63,["35"] = 64,["36"] = 65,["37"] = 66,["38"] = 67,["39"] = 67,["40"] = 67,["41"] = 67,["42"] = 67,["43"] = 67,["44"] = 67,["45"] = 67,["46"] = 75,["47"] = 76,["48"] = 77,["49"] = 78,["50"] = 81,["51"] = 86,["52"] = 87,["53"] = 88,["54"] = 93,["55"] = 100,["56"] = 101,["57"] = 14,["58"] = 104,["59"] = 105,["60"] = 106,["63"] = 110,["64"] = 112,["65"] = 113,["68"] = 117,["69"] = 119,["70"] = 120,["71"] = 122,["72"] = 123,["74"] = 104,["75"] = 5,["76"] = 6,["77"] = 7,["78"] = 8,["80"] = 10,["82"] = 5});
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -8,6 +6,8 @@ local ____game = require("lib.game")
 local getPlayer = ____game.getPlayer
 local ____force_2Ddata = require("data.force-data")
 local getForceData = ____force_2Ddata.getForceData
+local ____graphics = require("constants.graphics")
+local Graphics = ____graphics.default
 function ____exports.buildInterface(self, player)
     if not player then
         return
@@ -38,9 +38,9 @@ function ____exports.buildInterface(self, player)
     local searchButton = filter_search_container.add({
         type = "sprite-button",
         name = "Zonelist.name_zonelist_search_clear",
-        sprite = "se-search-close-white",
-        hovered_sprite = "se-search-close-black",
-        clicked_sprite = "se-search-close-black",
+        sprite = Graphics.SearchCloseWhite,
+        hovered_sprite = Graphics.SearchCloseBlack,
+        clicked_sprite = Graphics.SearchCloseBlack,
         tooltip = "space-exploration.clear-search"
     })
     searchButton.style.left_margin = 5

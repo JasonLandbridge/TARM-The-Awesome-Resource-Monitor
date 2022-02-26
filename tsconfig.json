@@ -20,7 +20,6 @@
 		// Breaks the loading of the Factorio map when using "luaBundle"
 		//"luaBundle": "control.lua",
 		"luaBundleEntry": "control.ts",
-		"sourceMapTraceback": true,
 		"noResolvePaths": ["__gvv__.gvv"]
 	}
 }

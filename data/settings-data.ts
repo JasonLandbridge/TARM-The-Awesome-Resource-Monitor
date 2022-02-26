@@ -1,19 +1,39 @@
 import Settings from '../constants/settings';
+import { OnInit, OnLoad } from '../typings/IEvent';
 
-export default class SettingsData {
-	public static get TickBetweenChecks(): number {
-		return settings.global[Settings.TickBetweenChecks].value as number;
+export class SettingsDataType implements OnLoad, OnInit {
+	private _tickBetweenChecks: number = 0;
+	private _overlayStep: number = 0;
+	private _prefixWithSurface: boolean = false;
+	private _entitiesPerTick: number = 0;
+
+	public get TickBetweenChecks(): number {
+		return this._tickBetweenChecks;
 	}
 
-	public static get OverlayStep(): number {
-		return settings.global[Settings.OverlayStep].value as number;
+	public get OverlayStep(): number {
+		return this._overlayStep;
 	}
 
-	public static get PrefixSiteWithSurface(): boolean {
-		return settings.global[Settings.PrefixSiteWithSurface].value as boolean;
+	public get PrefixSiteWithSurface(): boolean {
+		return this._prefixWithSurface;
 	}
 
-	public static get EntitiesPerTick(): number {
-		return settings.global[Settings.EntitiesPerTick].value as number;
+	public get EntitiesPerTick(): number {
+		return this._entitiesPerTick;
+	}
+
+	OnInit(): void {
+		this.OnLoad();
+	}
+
+	OnLoad(): void {
+		this._tickBetweenChecks = settings.global[Settings.TickBetweenChecks].value as number;
+		this._overlayStep = settings.global[Settings.OverlayStep].value as number;
+		this._prefixWithSurface = settings.global[Settings.PrefixSiteWithSurface].value as boolean;
+		this._entitiesPerTick = settings.global[Settings.EntitiesPerTick].value as number;
 	}
 }
+
+const SettingsData = new SettingsDataType();
+export default SettingsData;

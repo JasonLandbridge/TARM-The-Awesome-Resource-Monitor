@@ -20,7 +20,8 @@ export class ResourceCache implements OnTick {
 		// Update all trackedEntities with the latest resource amount
 		let key = resourceCache.iterationKey;
 		let iterationFunc = resourceCache.iterationFunction;
-		for (let i = 0; i < SettingsData.EntitiesPerTick; i++) {
+		let entitiesPerTick = SettingsData.EntitiesPerTick;
+		for (let i = 0; i < entitiesPerTick; i++) {
 			let pair = iterationFunc.next().value as [key: string, value: TrackingData];
 			key = pair[0];
 			let trackingData = pair[1];

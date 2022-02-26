@@ -24,9 +24,10 @@ function ResourceCache.prototype.OnTick(self, event)
     end
     local key = resourceCache.iterationKey
     local iterationFunc = resourceCache.iterationFunction
+    local entitiesPerTick = SettingsData.EntitiesPerTick
     do
         local i = 0
-        while i < SettingsData.EntitiesPerTick do
+        while i < entitiesPerTick do
             local pair = iterationFunc:next().value
             key = pair[1]
             local trackingData = pair[2]

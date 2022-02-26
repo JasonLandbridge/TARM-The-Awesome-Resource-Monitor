@@ -25,17 +25,22 @@ local ____resource_2Dcache = require("lib.resource-cache")
 local ResourceCache = ____resource_2Dcache.default
 local ____global_2Dtemp_2Ddata = require("data.global-temp-data")
 local GlobalTemp = ____global_2Dtemp_2Ddata.default
+local ____settings_2Ddata = require("data.settings-data")
+local SettingsData = ____settings_2Ddata.default
 setup_gvv(nil)
 script.on_init(function()
+    SettingsData:OnInit()
     Global:OnInit()
     GlobalTemp:OnInit()
     initPlayers(nil)
 end)
 script.on_configuration_changed(function()
     Global:OnInit()
+    SettingsData:OnLoad()
     initPlayers(nil)
 end)
 script.on_load(function()
+    SettingsData:OnLoad()
     GlobalTemp:OnLoad()
 end)
 script.on_event(

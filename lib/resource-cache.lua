@@ -3,8 +3,8 @@ require("lualib_bundle");
 local ____exports = {}
 local ____common = require("lib.common")
 local positionToString = ____common.positionToString
-local ____global_2Ddata = require("data.global-data")
-local Global = ____global_2Ddata.default
+local ____global_2Dsave_2Ddata = require("data.global-save-data")
+local Global = ____global_2Dsave_2Ddata.default
 local ____settings_2Ddata = require("data.settings-data")
 local SettingsData = ____settings_2Ddata.default
 local ____global_2Dtemp_2Ddata = require("data.global-temp-data")

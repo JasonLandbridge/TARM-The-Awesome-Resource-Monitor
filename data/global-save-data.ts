@@ -1,4 +1,11 @@
-import { ForceData, GlobalSaveState, PlayerData, ResourceTracker, TrackingData } from '../declarations/global-save-state';
+import {
+	ForceData,
+	GlobalSaveState,
+	PlayerData,
+	ResourceTracker,
+	DraftResourceSite,
+	TrackingData,
+} from '../declarations/global-save-state';
 import Log from '../lib/log';
 
 declare var global: GlobalSaveState;
@@ -17,11 +24,11 @@ export default class Global {
 		return global.resourceTracker;
 	}
 
-	public static get trackedResources(): { [name: string]: TrackingData; } {
+	public static get trackedResources(): Record<string, TrackingData> {
 		return global.resourceTracker.trackedResources;
 	}
 
-	public static get forceData(): { [name: string]: ForceData } {
+	public static get forceData(): Record<string, ForceData> {
 		return global.forceData;
 	}
 
@@ -65,6 +72,29 @@ export default class Global {
 
 	public static setTrackedResources(key: string, value: TrackingData) {
 		global.resourceTracker.trackedResources[key] = value;
+	}
+
+	public static getDraftResourceSite(playerIndex: number): DraftResourceSite | undefined {
+		let playerData = this.playerData.find((x) => x.index === playerIndex);
+		if (playerData){
+			return playerData.draftResourceSite;
+		}
+		return undefined;
+	}
+
+	public static setDraftResourceSite(playerIndex: number, draftResourceSite: DraftResourceSite) {
+		let index = global.playerData.findIndex((x) => x.index === playerIndex);
+		if (index > -1) {
+			global.playerData[index].draftResourceSite = draftResourceSite;
+		}
+	}
+
+	public static setAllTrackedResources(trackedResources: Record<string, TrackingData>) {
+		global.resourceTracker.trackedResources = trackedResources;
+	}
+
+	public static setAllPlayerData(playerData: PlayerData[]) {
+		global.playerData = playerData;
 	}
 
 	// endregion

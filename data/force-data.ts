@@ -1,5 +1,5 @@
 import { ForceData, ResourceSite } from '../declarations/global-save-state';
-import Global from './global-data';
+import Global from './global-save-data';
 
 export function getForceData(forceName: string): ForceData | undefined {
 	return Global.forceData[forceName] ?? undefined;

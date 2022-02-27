@@ -3,12 +3,17 @@ import Events from './constants/events';
 import { toggleInterface } from './gui/main-hud';
 import { Entity } from './constants';
 import { setup_gvv } from './lib/debug';
-import Global from './data/global-data';
+import Global from './data/global-save-data';
 import { getPlayerData, initPlayer, initPlayers } from './data/player-data';
-import { addResource, clearCurrentSite, createResourceSite, updatePlayers } from './lib/resource-tracker';
+import {
+	addResourcesToDraftResourceSite,
+	startResourceSiteCreation,
+	updatePlayers,
+} from './lib/resource-tracker';
 import ResourceCache from './lib/resource-cache';
 import GlobalTemp from './data/global-temp-data';
 import SettingsData from './data/settings-data';
+import { importYarmData } from './lib/yarm-import';
 
 setup_gvv();
 
@@ -17,6 +22,7 @@ script.on_init(() => {
 	Global.OnInit();
 	GlobalTemp.OnInit();
 	initPlayers();
+	importYarmData();
 });
 
 script.on_configuration_changed(() => {
@@ -61,18 +67,18 @@ script.on_event(defines.events.on_player_selected_area, (event: OnPlayerSelected
 		return;
 	}
 
-	// if we have an expanding site, submit it. else, just drop the current site
-	if (playerData.currentSite) {
-		createResourceSite(event.player_index);
+	// Start with ensuring there is a resource site in which we can add the selected resources
+	if (!playerData.draftResourceSite) {
+		startResourceSiteCreation(event);
 	} else {
-		clearCurrentSite(event.player_index);
+		addResourcesToDraftResourceSite(playerData.index, event.entities);
 	}
 
-	for (const entity of event.entities) {
-		if (entity.type === 'resource') {
-			addResource(event.player_index, entity);
-		}
-	}
+	// if (playerData.resourceSiteCreation) {
+	// 	createResourceSite(event.player_index);
+	// } else {
+	// 	clearCurrentSite(event.player_index);
+	// }
 });
 
 script.on_event(defines.events.on_player_created, (event: OnPlayerCreatedEvent) => {

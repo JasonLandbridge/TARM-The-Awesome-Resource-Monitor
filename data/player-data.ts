@@ -2,7 +2,7 @@ import { getPlayer, getPlayers } from '../lib/game';
 import { ForceData, PlayerData } from '../declarations/global-save-state';
 import { getForceData } from './force-data';
 import Log from '../lib/log';
-import Global from './global-data';
+import Global from './global-save-data';
 
 export function initPlayer(playerIndex: number): void {
 	let player = getPlayer(playerIndex);
@@ -11,7 +11,7 @@ export function initPlayer(playerIndex: number): void {
 	}
 	initForce(player.force);
 	if (!getPlayerData(playerIndex)) {
-		Global.GlobalData.playerData.push({ overlays: [], index: playerIndex, guiUpdateTicks: 60, currentSite: undefined });
+		Global.GlobalData.playerData.push({ overlays: [], index: playerIndex, guiUpdateTicks: 60, draftResourceSite: undefined });
 	}
 }
 

@@ -1,23 +1,45 @@
 export interface GlobalSaveState {
 	playerData: PlayerData[];
-	forceData: { [name: string]: ForceData };
+	forceData: Record<string, ForceData>;
 	resourceTracker: ResourceTracker;
 }
+
+// region PlayerData
 
 export interface PlayerData {
 	index: number;
 	guiUpdateTicks: number;
-	currentSite: ResourceSite | undefined;
+	draftResourceSite: DraftResourceSite | undefined;
 	/**
 	 * The (dark blue) overlay entities when a resource site is selected or "crawled" when searching for all ore.
 	 */
 	overlays: LuaEntity[];
 }
 
+export interface DraftResourceSite {
+	resourceSite: ResourceSite;
+	isSiteExpanding?: boolean;
+	finalizing: boolean;
+	isOverlayBeingCreated: boolean;
+	hasExpanded?: boolean;
+	resourceEntities: LuaEntity[];
+	nextToScan: LuaEntity[];
+	nextToOverlay: any;
+	/**
+	 * The game tick it has since been finalized on
+	 */
+	finalizingSince: number;
+}
+
+// endregion
+
+// region ForceData
+
 export interface ForceData {
 	resourceSites: ResourceSite[];
 }
 
+// endregion
 export interface ResourceTracker {
 	trackedResources: { [name: string]: TrackingData };
 }
@@ -31,39 +53,28 @@ export interface TrackingData {
 
 export interface ResourceSite {
 	name: string;
-	isSiteExpanding?: boolean;
-	hasExpanded?: boolean;
 	amount: number;
 	initialAmount: number;
-	originalAmount?: number;
 	oreType: string;
 	oreName: LocalisedString;
 	orePerMinute: number;
-	finalizing: boolean;
-	/**
-	 * The game tick it has since been finalized on
-	 */
-	finalizingSince: number;
+
 	lastOreCheck: number | undefined;
 	lastModifiedAmount: number | undefined;
 	addedAt: number;
 	surface: LuaSurface;
 	force: LuaForce;
 	/**
-	 * The [entities]{@link TrackingData} belonging to this [Resource Site]{@link ResourceSite}
+	 * The [entities]{@link TrackingData} belonging to this [Resource Site]{@link ResourceSite} index by positionKey
 	 */
-	trackedPositionKeys: string[];
+	trackedPositionKeys: Record<string, boolean>;
 	entityCount: number;
 	extents: Extend;
-	nextToScan: LuaEntity[];
-	entitiesToBeOverlaid: any;
-	nextToOverlay: any;
+
 	// used for ETD easing; initialized when needed,
 	etdMinutes: number;
 	remainingPerMille: number;
 	center: PositionArray;
-	iterating?: Iteration;
-	isOverlayBeingCreated: boolean;
 }
 
 export interface Extend {

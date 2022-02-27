@@ -1,6 +1,6 @@
 import { positionToString } from './common';
 import { TrackingData } from '../declarations/global-save-state';
-import Global from '../data/global-data';
+import Global from '../data/global-save-data';
 import { OnTick } from '../typings/IEvent';
 import SettingsData from '../data/settings-data';
 import GlobalTemp from '../data/global-temp-data';

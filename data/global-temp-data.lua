@@ -1,8 +1,8 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
 local ____exports = {}
-local ____global_2Ddata = require("data.global-data")
-local Global = ____global_2Ddata.default
+local ____global_2Dsave_2Ddata = require("data.global-save-data")
+local Global = ____global_2Dsave_2Ddata.default
 ____exports.default = __TS__Class()
 local GlobalTemp = ____exports.default
 GlobalTemp.name = "GlobalTemp"

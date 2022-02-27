@@ -1,6 +1,6 @@
 import { GlobalTempState, ResourceCache } from '../declarations/global-temp-state';
 import { TrackingData } from '../declarations/global-save-state';
-import Global from './global-data';
+import Global from './global-save-data';
 
 declare let globalTempData: GlobalTempState;
 

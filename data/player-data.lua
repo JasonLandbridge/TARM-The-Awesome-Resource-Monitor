@@ -8,8 +8,8 @@ local ____force_2Ddata = require("data.force-data")
 local getForceData = ____force_2Ddata.getForceData
 local ____log = require("lib.log")
 local Log = ____log.default
-local ____global_2Ddata = require("data.global-data")
-local Global = ____global_2Ddata.default
+local ____global_2Dsave_2Ddata = require("data.global-save-data")
+local Global = ____global_2Dsave_2Ddata.default
 function ____exports.initForce(self, force)
     local force_data = getForceData(nil, force.name)
     if not force_data then
@@ -35,7 +35,7 @@ function ____exports.initPlayer(self, playerIndex)
     end
     ____exports.initForce(nil, player.force)
     if not ____exports.getPlayerData(nil, playerIndex) then
-        __TS__ArrayPush(Global.GlobalData.playerData, {overlays = {}, index = playerIndex, guiUpdateTicks = 60, currentSite = nil})
+        __TS__ArrayPush(Global.GlobalData.playerData, {overlays = {}, index = playerIndex, guiUpdateTicks = 60, draftResourceSite = nil})
     end
 end
 function ____exports.initPlayers(self)

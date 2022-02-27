@@ -83,5 +83,30 @@ end
 function Global.setTrackedResources(self, key, value)
     global.resourceTracker.trackedResources[key] = value
 end
+function Global.getDraftResourceSite(self, playerIndex)
+    local playerData = __TS__ArrayFind(
+        self.playerData,
+        function(____, x) return x.index == playerIndex end
+    )
+    if playerData then
+        return playerData.draftResourceSite
+    end
+    return nil
+end
+function Global.setDraftResourceSite(self, playerIndex, draftResourceSite)
+    local index = __TS__ArrayFindIndex(
+        global.playerData,
+        function(____, x) return x.index == playerIndex end
+    )
+    if index > -1 then
+        global.playerData[index + 1].draftResourceSite = draftResourceSite
+    end
+end
+function Global.setAllTrackedResources(self, trackedResources)
+    global.resourceTracker.trackedResources = trackedResources
+end
+function Global.setAllPlayerData(self, playerData)
+    global.playerData = playerData
+end
 ____exports.default = Global
 return ____exports

@@ -1,13 +1,11 @@
 import Log from './log';
 import { getPlayer, getPlayers } from './game';
 import { getPlayerData, initPlayer } from '../data/player-data';
-import { addResourceSiteToForce, getForceData } from '../data/force-data';
 import ResourceCache from './resource-cache';
 import { PlayerData, ResourceSite, DraftResourceSite } from '../declarations/global-save-state';
 import SettingsData from '../data/settings-data';
 import { Entity, General } from '../constants';
-import { findCenter, findResourceAt, getOctantName, shiftPosition } from './common';
-import { distance } from 'util';
+import { findResourceAt, shiftPosition, sum } from './common';
 import Global from '../data/global-save-data';
 
 /**
@@ -52,19 +50,23 @@ import Global from '../data/global-save-data';
 // 	}
 // }
 
-export function clearCurrentSite(playerIndex: number) {
+export function clearDraftResourceSite(playerIndex: number) {
 	let player = getPlayer(playerIndex);
 	let playerData = getPlayerData(playerIndex);
 
 	if (!(player && playerData)) {
 		return;
 	}
-
+	let draftResourceSite = Global.getDraftResourceSite(playerIndex);
+	if (!draftResourceSite) {
+		Log.error(playerIndex, `clearDraftResourceSite() => Could not clear DraftResourceSite as it is undefined already`);
+		return;
+	}
 	playerData.draftResourceSite = undefined;
 
 	// Clean-up the overlay created on ores after it has been crawled
-	while (playerData.overlays.length > 0) {
-		playerData.overlays.pop()?.destroy();
+	while (draftResourceSite.overlays.length > 0) {
+		draftResourceSite.overlays.pop()?.destroy();
 	}
 }
 
@@ -107,7 +109,7 @@ export function startResourceSiteCreation(event: OnPlayerSelectedAreaEvent) {
 		force: player.force,
 		oreType: sampleResource.name,
 		oreName: sampleResource.prototype.localised_name,
-		amount: 0,
+		totalAmount: 0,
 		entityCount: 0,
 		etdMinutes: 0,
 		extents: {
@@ -123,18 +125,9 @@ export function startResourceSiteCreation(event: OnPlayerSelectedAreaEvent) {
 		trackedPositionKeys: {},
 	};
 
-	// Sum all the amount from the resources
-	let totalResources = 0;
-	for (const resourceEntity of sameResourceEntities) {
-		let amount = resourceEntity.amount;
-		resourceSite.amount += amount;
-		resourceSite.entityCount++;
-		totalResources += amount;
-	}
-
-	resourceSite.entityCount = totalResources;
-
-	let resourceSiteCreation: DraftResourceSite = {
+	let draftResourceSite: DraftResourceSite = {
+		playerIndex: playerIndex,
+		overlays: [],
 		finalizingSince: 0,
 		finalizing: false,
 		isOverlayBeingCreated: false,
@@ -146,7 +139,17 @@ export function startResourceSiteCreation(event: OnPlayerSelectedAreaEvent) {
 		resourceSite: resourceSite,
 	};
 
-	Global.setDraftResourceSite(playerIndex, resourceSiteCreation);
+	// Sum all the amount from the resources
+	for (const resourceEntity of sameResourceEntities) {
+		addSingleResourceEntityToResourceDraft(draftResourceSite, resourceEntity);
+	//	draftResourceSite.nextToScan.push(resourceEntity);
+	}
+
+	resourceSite.totalAmount = sum(sameResourceEntities.map((x) => x.amount));
+	resourceSite.initialAmount = resourceSite.totalAmount;
+	resourceSite.entityCount = Object.keys(resourceSite.trackedPositionKeys).length;
+
+	Global.setDraftResourceSite(playerIndex, draftResourceSite);
 }
 
 export function addResourcesToDraftResourceSite(playerIndex: number, resources: LuaEntity[]) {
@@ -167,79 +170,49 @@ export function addResourcesToDraftResourceSite(playerIndex: number, resources: 
 	let sameResourceEntities = resources.filter((x) => x.name === draftResourceSite?.resourceSite.oreType);
 	draftResourceSite.resourceEntities = draftResourceSite.resourceEntities.concat(sameResourceEntities);
 
-	for (const resource of sameResourceEntities) {
-		draftResourceSite.resourceSite.amount += resource.amount;
-		draftResourceSite.resourceSite.entityCount++;
+	let resourceSite = draftResourceSite.resourceSite;
+	for (const resourceEntity of sameResourceEntities) {
+		addSingleResourceEntityToResourceDraft(draftResourceSite, resourceEntity);
+		//draftResourceSite.nextToScan.push(resourceEntity);
 	}
 
-	Global.setDraftResourceSite(playerIndex, draftResourceSite);
+	resourceSite.totalAmount += sum(sameResourceEntities.map((x) => x.amount));
+	resourceSite.initialAmount = resourceSite.totalAmount;
+	resourceSite.entityCount = Object.keys(resourceSite.trackedPositionKeys).length;
 
+	Global.setDraftResourceSite(playerIndex, draftResourceSite);
 }
 
 export function registerResourceSite(resourceSite: ResourceSite) {}
 
-// export function addSingleEntity(playerIndex: number, entity: LuaEntity) {
-// 	let playerData = getPlayerData(playerIndex);
-// 	if (!playerData) {
-// 		return;
-// 	}
-//
-// 	let resourceSite = playerData.draftResourceSite;
-// 	if (!resourceSite) {
-// 		Log.warn(playerIndex, `addSingleEntity() => \'playerData.currentSite\' was invalid`);
-// 		return;
-// 	}
-//
-// 	let positionKey = ResourceCache.addEntity(entity);
-// 	if (!positionKey) {
-// 		Log.errorAll(`addSingleEntity() => Failed to add entity ${entity.position}`);
-// 		return;
-// 	}
-//
-// 	// Don't add multiple times
-// 	if (resourceSite.trackedPositionKeys.find((x) => x === positionKey)) {
-// 		return;
-// 	}
-//
-// 	if (resourceSite.finalizing) {
-// 		resourceSite.finalizing = false;
-// 	}
-//
-// 	// Memorize this entity
-// 	resourceSite.trackedPositionKeys.push(positionKey);
-// 	resourceSite.entityCount++;
-// 	resourceSite.nextToScan.push(entity);
-// 	resourceSite.amount += entity.amount;
-//
-// 	// Resize the site bounds if necessary
-// 	if (entity.position.x < resourceSite.extents.left) {
-// 		resourceSite.extents.left = entity.position.x;
-// 	} else if (entity.position.x > resourceSite.extents.right) {
-// 		resourceSite.extents.right = entity.position.x;
-// 	}
-//
-// 	if (entity.position.y < resourceSite.extents.top) {
-// 		resourceSite.extents.top = entity.position.y;
-// 	} else if (entity.position.x > resourceSite.extents.bottom) {
-// 		resourceSite.extents.bottom = entity.position.y;
-// 	}
-//
-// 	// Show blue overlay of resources selected
-// 	addOverlayOnResource(entity, playerData);
-// }
+export function checkResourceSiteExtents(resourceSite: ResourceSite, resourceEntity: LuaEntity) {
+	// Resize the site bounds if necessary
+	if (resourceEntity.position.x < resourceSite.extents.left) {
+		resourceSite.extents.left = resourceEntity.position.x;
+	} else if (resourceEntity.position.x > resourceSite.extents.right) {
+		resourceSite.extents.right = resourceEntity.position.x;
+	}
 
-export function addOverlayOnResource(entity: LuaEntity, playerData: PlayerData) {
+	if (resourceEntity.position.y < resourceSite.extents.top) {
+		resourceSite.extents.top = resourceEntity.position.y;
+	} else if (resourceEntity.position.x > resourceSite.extents.bottom) {
+		resourceSite.extents.bottom = resourceEntity.position.y;
+	}
+}
+
+export function addOverlayOnResource(entity: LuaEntity, draftResourceSite: DraftResourceSite) {
 	let pos = entity.position;
 	let surface = entity.surface;
 
-	if (Math.floor(pos.x) % SettingsData.OverlayStep !== 0 || Math.floor(pos.y) % SettingsData.OverlayStep !== 0) {
+	let overlayStep = SettingsData.OverlayStep;
+	if (Math.floor(pos.x) % overlayStep !== 0 || Math.floor(pos.y) % overlayStep !== 0) {
 		return;
 	}
 
 	let overlay = surface.create_entity({ name: Entity.ResourceManagerOverlay, force: game.forces.neutral, position: pos });
 	if (!overlay) {
 		Log.error(
-			playerData.index,
+			draftResourceSite.playerIndex,
 			`addOverlayOnResource() => Could not create resource overlay on position x: ${pos.x}, y: ${pos.y}`,
 		);
 		return;
@@ -248,20 +221,20 @@ export function addOverlayOnResource(entity: LuaEntity, playerData: PlayerData) 
 	overlay.destructible = false;
 	overlay.operable = false;
 
-	playerData.overlays.push(overlay);
+	draftResourceSite.overlays.push(overlay);
 }
 
 export function scanResourceSite(playerIndex: number) {
-	let currentSite = getPlayerData(playerIndex)?.draftResourceSite;
-	if (!currentSite) {
-		Log.errorAll(`scanResourceSite() => Could not retrieve the currentSite with playerIndex: ${playerIndex}`);
+	let draftResourceSite = Global.getDraftResourceSite(playerIndex);
+	if (!draftResourceSite) {
+		Log.errorAll(`scanResourceSite() => Could not retrieve the draftResourceSite with playerIndex: ${playerIndex}`);
 		return;
 	}
 
-	let toScan = Math.min(30, currentSite.nextToScan.length);
+	let toScan = Math.min(30, draftResourceSite.nextToScan.length);
 
 	for (let i = 1; toScan; i++) {
-		let entity = currentSite.nextToScan.pop();
+		let entity = draftResourceSite.nextToScan.pop();
 		if (!entity) {
 			Log.debugAll(`scanResourceSite() => No more resources to scan for draftResourceSite!`);
 			break;
@@ -271,10 +244,22 @@ export function scanResourceSite(playerIndex: number) {
 
 		for (const direction of General.Directions) {
 			let resourceFound = findResourceAt(surface, shiftPosition(position, direction));
-			if (resourceFound && resourceFound.name === currentSite.resourceSite.oreType) {
-				// addSingleEntity(playerIndex, resourceFound);
+			if (resourceFound && resourceFound.name === draftResourceSite.resourceSite.oreType) {
+				addSingleResourceEntityToResourceDraft(draftResourceSite, resourceFound);
 			}
 		}
+	}
+}
+
+export function addSingleResourceEntityToResourceDraft(draftResourceSite: DraftResourceSite, resourceEntity: LuaEntity) {
+	// Add new entity to the ResourceCache
+	let positionKey = ResourceCache.addResourceEntityToCache(resourceEntity);
+	// Don't add if it is already added
+	if (positionKey && !draftResourceSite.resourceSite.trackedPositionKeys[positionKey]) {
+		draftResourceSite.resourceSite.trackedPositionKeys[positionKey] = true;
+		addOverlayOnResource(resourceEntity, draftResourceSite);
+		checkResourceSiteExtents(draftResourceSite.resourceSite, resourceEntity);
+		draftResourceSite.nextToScan.push(resourceEntity);
 	}
 }
 
@@ -329,7 +314,7 @@ export function updatePlayers(event: EventData) {
 			initPlayer(player.index);
 			playerData = getPlayerData(player.index);
 		} else if (!player.connected && playerData.draftResourceSite) {
-			clearCurrentSite(player.index);
+			clearDraftResourceSite(player.index);
 		}
 
 		if (playerData?.draftResourceSite) {
@@ -340,7 +325,7 @@ export function updatePlayers(event: EventData) {
 			} else if (!resourceSite.finalizing) {
 				//finalizeResourceSite(player.index);
 			} else if (resourceSite.finalizingSince + 120 === event.tick) {
-			//	createResourceSite(player.index);
+				//	createResourceSite(player.index);
 			}
 
 			if (resourceSite.isOverlayBeingCreated) {

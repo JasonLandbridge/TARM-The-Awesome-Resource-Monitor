@@ -34,7 +34,7 @@ function migrateForceData(self, entities, forceDatum)
             __TS__ArrayPush(
                 newForceData[key].resourceSites,
                 {
-                    amount = yarmResourceSite.amount,
+                    totalAmount = yarmResourceSite.amount,
                     addedAt = yarmResourceSite.added_at,
                     center = yarmResourceSite.center,
                     entityCount = yarmResourceSite.entity_count,
@@ -96,7 +96,7 @@ end
 function ____exports.importYarmData(self)
     if remote.interfaces.YARM and remote.interfaces.YARM.get_global_data then
         local globalState = remote.call("YARM", "get_global_data")
-        if globalState then
+        if globalState and #__TS__ObjectKeys(globalState) > 0 then
             Log:infoAll("Start of importing YARM data")
             local resourceEntities = globalState.ore_tracker.entities
             migrateOreTracker(nil, resourceEntities)
@@ -106,7 +106,9 @@ function ____exports.importYarmData(self)
             migratePlayerData(nil, globalState.player_data)
             Log:infoAll("Imported the player data of YARM")
             Log:infoAll("Successfully imported YARM data")
+            return
         end
+        Log:errorAll("Yarm import failed, YARM global contained no values")
     end
 end
 return ____exports

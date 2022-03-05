@@ -9,6 +9,8 @@ local getPlayers = ____game.getPlayers
 local ____player_2Ddata = require("data.player-data")
 local getPlayerData = ____player_2Ddata.getPlayerData
 local initPlayer = ____player_2Ddata.initPlayer
+local ____resource_2Dcache = require("lib.resource-cache")
+local ResourceCache = ____resource_2Dcache.default
 local ____settings_2Ddata = require("data.settings-data")
 local SettingsData = ____settings_2Ddata.default
 local ____constants = require("constants.index")
@@ -17,23 +19,70 @@ local General = ____constants.General
 local ____common = require("lib.common")
 local findResourceAt = ____common.findResourceAt
 local shiftPosition = ____common.shiftPosition
+local sum = ____common.sum
 local ____global_2Dsave_2Ddata = require("data.global-save-data")
 local Global = ____global_2Dsave_2Ddata.default
+function ____exports.checkResourceSiteExtents(self, resourceSite, resourceEntity)
+    if resourceEntity.position.x < resourceSite.extents.left then
+        resourceSite.extents.left = resourceEntity.position.x
+    elseif resourceEntity.position.x > resourceSite.extents.right then
+        resourceSite.extents.right = resourceEntity.position.x
+    end
+    if resourceEntity.position.y < resourceSite.extents.top then
+        resourceSite.extents.top = resourceEntity.position.y
+    elseif resourceEntity.position.x > resourceSite.extents.bottom then
+        resourceSite.extents.bottom = resourceEntity.position.y
+    end
+end
+function ____exports.addOverlayOnResource(self, entity, draftResourceSite)
+    local pos = entity.position
+    local surface = entity.surface
+    local overlayStep = SettingsData.OverlayStep
+    if math.floor(pos.x) % overlayStep ~= 0 or math.floor(pos.y) % overlayStep ~= 0 then
+        return
+    end
+    local overlay = surface.create_entity({name = Entity.ResourceManagerOverlay, force = game.forces.neutral, position = pos})
+    if not overlay then
+        Log:error(
+            draftResourceSite.playerIndex,
+            (("addOverlayOnResource() => Could not create resource overlay on position x: " .. tostring(pos.x)) .. ", y: ") .. tostring(pos.y)
+        )
+        return
+    end
+    overlay.minable = false
+    overlay.destructible = false
+    overlay.operable = false
+    __TS__ArrayPush(draftResourceSite.overlays, overlay)
+end
+function ____exports.addSingleResourceEntityToResourceDraft(self, draftResourceSite, resourceEntity)
+    local positionKey = ResourceCache:addResourceEntityToCache(resourceEntity)
+    if positionKey and not draftResourceSite.resourceSite.trackedPositionKeys[positionKey] then
+        draftResourceSite.resourceSite.trackedPositionKeys[positionKey] = true
+        ____exports.addOverlayOnResource(nil, resourceEntity, draftResourceSite)
+        ____exports.checkResourceSiteExtents(nil, draftResourceSite.resourceSite, resourceEntity)
+        __TS__ArrayPush(draftResourceSite.nextToScan, resourceEntity)
+    end
+end
 function ____exports.updateUi(self, playerIndex)
 end
 function ____exports.processOverlayForExistingResourceSite(self, index)
 end
-function ____exports.clearCurrentSite(self, playerIndex)
+function ____exports.clearDraftResourceSite(self, playerIndex)
     local player = getPlayer(nil, playerIndex)
     local playerData = getPlayerData(nil, playerIndex)
     if not (player and playerData) then
         return
     end
+    local draftResourceSite = Global:getDraftResourceSite(playerIndex)
+    if not draftResourceSite then
+        Log:error(playerIndex, "clearDraftResourceSite() => Could not clear DraftResourceSite as it is undefined already")
+        return
+    end
     playerData.draftResourceSite = nil
-    while #playerData.overlays > 0 do
-        local ____playerData_overlays_pop_result_destroy_result_0 = table.remove(playerData.overlays)
-        if ____playerData_overlays_pop_result_destroy_result_0 ~= nil then
-            ____playerData_overlays_pop_result_destroy_result_0 = ____playerData_overlays_pop_result_destroy_result_0.destroy()
+    while #draftResourceSite.overlays > 0 do
+        local ____draftResourceSite_overlays_pop_result_destroy_result_0 = table.remove(draftResourceSite.overlays)
+        if ____draftResourceSite_overlays_pop_result_destroy_result_0 ~= nil then
+            ____draftResourceSite_overlays_pop_result_destroy_result_0 = ____draftResourceSite_overlays_pop_result_destroy_result_0.destroy()
         end
     end
 end
@@ -77,7 +126,7 @@ function ____exports.startResourceSiteCreation(self, event)
         force = player.force,
         oreType = sampleResource.name,
         oreName = sampleResource.prototype.localised_name,
-        amount = 0,
+        totalAmount = 0,
         entityCount = 0,
         etdMinutes = 0,
         extents = {left = 0, right = 0, top = 0, bottom = 0},
@@ -87,15 +136,9 @@ function ____exports.startResourceSiteCreation(self, event)
         name = "",
         trackedPositionKeys = {}
     }
-    local totalResources = 0
-    for ____, resourceEntity in ipairs(sameResourceEntities) do
-        local amount = resourceEntity.amount
-        resourceSite.amount = resourceSite.amount + amount
-        resourceSite.entityCount = resourceSite.entityCount + 1
-        totalResources = totalResources + amount
-    end
-    resourceSite.entityCount = totalResources
-    local resourceSiteCreation = {
+    local draftResourceSite = {
+        playerIndex = playerIndex,
+        overlays = {},
         finalizingSince = 0,
         finalizing = false,
         isOverlayBeingCreated = false,
@@ -106,7 +149,19 @@ function ____exports.startResourceSiteCreation(self, event)
         resourceEntities = sameResourceEntities,
         resourceSite = resourceSite
     }
-    Global:setDraftResourceSite(playerIndex, resourceSiteCreation)
+    for ____, resourceEntity in ipairs(sameResourceEntities) do
+        ____exports.addSingleResourceEntityToResourceDraft(nil, draftResourceSite, resourceEntity)
+    end
+    resourceSite.totalAmount = sum(
+        nil,
+        __TS__ArrayMap(
+            sameResourceEntities,
+            function(____, x) return x.amount end
+        )
+    )
+    resourceSite.initialAmount = resourceSite.totalAmount
+    resourceSite.entityCount = #__TS__ObjectKeys(resourceSite.trackedPositionKeys)
+    Global:setDraftResourceSite(playerIndex, draftResourceSite)
 end
 function ____exports.addResourcesToDraftResourceSite(self, playerIndex, resources)
     local playerData = getPlayerData(nil, playerIndex)
@@ -134,50 +189,34 @@ function ____exports.addResourcesToDraftResourceSite(self, playerIndex, resource
         end
     )
     draftResourceSite.resourceEntities = __TS__ArrayConcat(draftResourceSite.resourceEntities, sameResourceEntities)
-    for ____, resource in ipairs(sameResourceEntities) do
-        local ____draftResourceSite_resourceSite_5, ____amount_6 = draftResourceSite.resourceSite, "amount"
-        ____draftResourceSite_resourceSite_5[____amount_6] = ____draftResourceSite_resourceSite_5[____amount_6] + resource.amount
-        local ____draftResourceSite_resourceSite_7, ____entityCount_8 = draftResourceSite.resourceSite, "entityCount"
-        ____draftResourceSite_resourceSite_7[____entityCount_8] = ____draftResourceSite_resourceSite_7[____entityCount_8] + 1
+    local resourceSite = draftResourceSite.resourceSite
+    for ____, resourceEntity in ipairs(sameResourceEntities) do
+        ____exports.addSingleResourceEntityToResourceDraft(nil, draftResourceSite, resourceEntity)
     end
+    resourceSite.totalAmount = resourceSite.totalAmount + sum(
+        nil,
+        __TS__ArrayMap(
+            sameResourceEntities,
+            function(____, x) return x.amount end
+        )
+    )
+    resourceSite.initialAmount = resourceSite.totalAmount
+    resourceSite.entityCount = #__TS__ObjectKeys(resourceSite.trackedPositionKeys)
     Global:setDraftResourceSite(playerIndex, draftResourceSite)
 end
 function ____exports.registerResourceSite(self, resourceSite)
 end
-function ____exports.addOverlayOnResource(self, entity, playerData)
-    local pos = entity.position
-    local surface = entity.surface
-    if math.floor(pos.x) % SettingsData.OverlayStep ~= 0 or math.floor(pos.y) % SettingsData.OverlayStep ~= 0 then
-        return
-    end
-    local overlay = surface.create_entity({name = Entity.ResourceManagerOverlay, force = game.forces.neutral, position = pos})
-    if not overlay then
-        Log:error(
-            playerData.index,
-            (("addOverlayOnResource() => Could not create resource overlay on position x: " .. tostring(pos.x)) .. ", y: ") .. tostring(pos.y)
-        )
-        return
-    end
-    overlay.minable = false
-    overlay.destructible = false
-    overlay.operable = false
-    __TS__ArrayPush(playerData.overlays, overlay)
-end
 function ____exports.scanResourceSite(self, playerIndex)
-    local ____getPlayerData_result_draftResourceSite_9 = getPlayerData(nil, playerIndex)
-    if ____getPlayerData_result_draftResourceSite_9 ~= nil then
-        ____getPlayerData_result_draftResourceSite_9 = ____getPlayerData_result_draftResourceSite_9.draftResourceSite
-    end
-    local currentSite = ____getPlayerData_result_draftResourceSite_9
-    if not currentSite then
-        Log:errorAll("scanResourceSite() => Could not retrieve the currentSite with playerIndex: " .. tostring(playerIndex))
+    local draftResourceSite = Global:getDraftResourceSite(playerIndex)
+    if not draftResourceSite then
+        Log:errorAll("scanResourceSite() => Could not retrieve the draftResourceSite with playerIndex: " .. tostring(playerIndex))
         return
     end
-    local toScan = math.min(30, #currentSite.nextToScan)
+    local toScan = math.min(30, #draftResourceSite.nextToScan)
     do
         local i = 1
         while toScan do
-            local entity = table.remove(currentSite.nextToScan)
+            local entity = table.remove(draftResourceSite.nextToScan)
             if not entity then
                 Log:debugAll("scanResourceSite() => No more resources to scan for draftResourceSite!")
                 break
@@ -190,7 +229,8 @@ function ____exports.scanResourceSite(self, playerIndex)
                     surface,
                     shiftPosition(nil, position, direction)
                 )
-                if resourceFound and resourceFound.name == currentSite.resourceSite.oreType then
+                if resourceFound and resourceFound.name == draftResourceSite.resourceSite.oreType then
+                    ____exports.addSingleResourceEntityToResourceDraft(nil, draftResourceSite, resourceFound)
                 end
             end
             i = i + 1
@@ -211,13 +251,13 @@ function ____exports.updatePlayers(self, event)
             initPlayer(nil, player.index)
             playerData = getPlayerData(nil, player.index)
         elseif not player.connected and playerData.draftResourceSite then
-            ____exports.clearCurrentSite(nil, player.index)
+            ____exports.clearDraftResourceSite(nil, player.index)
         end
-        local ____playerData_draftResourceSite_11 = playerData
-        if ____playerData_draftResourceSite_11 ~= nil then
-            ____playerData_draftResourceSite_11 = ____playerData_draftResourceSite_11.draftResourceSite
+        local ____playerData_draftResourceSite_5 = playerData
+        if ____playerData_draftResourceSite_5 ~= nil then
+            ____playerData_draftResourceSite_5 = ____playerData_draftResourceSite_5.draftResourceSite
         end
-        if ____playerData_draftResourceSite_11 then
+        if ____playerData_draftResourceSite_5 then
             local resourceSite = playerData.draftResourceSite
             if #resourceSite.nextToScan > 0 then
                 ____exports.scanResourceSite(nil, player.index)

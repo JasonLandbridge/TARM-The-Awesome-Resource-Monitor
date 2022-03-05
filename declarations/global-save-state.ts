@@ -10,13 +10,10 @@ export interface PlayerData {
 	index: number;
 	guiUpdateTicks: number;
 	draftResourceSite: DraftResourceSite | undefined;
-	/**
-	 * The (dark blue) overlay entities when a resource site is selected or "crawled" when searching for all ore.
-	 */
-	overlays: LuaEntity[];
 }
 
 export interface DraftResourceSite {
+	playerIndex: number;
 	resourceSite: ResourceSite;
 	isSiteExpanding?: boolean;
 	finalizing: boolean;
@@ -25,6 +22,10 @@ export interface DraftResourceSite {
 	resourceEntities: LuaEntity[];
 	nextToScan: LuaEntity[];
 	nextToOverlay: any;
+	/**
+	 * The (dark blue) overlay entities when a resource site is selected or "crawled" when searching for all ore.
+	 */
+	overlays: LuaEntity[];
 	/**
 	 * The game tick it has since been finalized on
 	 */
@@ -53,7 +54,7 @@ export interface TrackingData {
 
 export interface ResourceSite {
 	name: string;
-	amount: number;
+	totalAmount: number;
 	initialAmount: number;
 	oreType: string;
 	oreName: LocalisedString;

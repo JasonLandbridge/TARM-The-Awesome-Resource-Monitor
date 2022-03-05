@@ -4,6 +4,7 @@ import Global from '../data/global-save-data';
 import { OnTick } from '../typings/IEvent';
 import SettingsData from '../data/settings-data';
 import GlobalTemp from '../data/global-temp-data';
+import Log from './log';
 
 export class ResourceCache implements OnTick {
 
@@ -50,8 +51,9 @@ export class ResourceCache implements OnTick {
 	 * @param entity
 	 * @return Returns the positionKey
 	 */
-	addEntity(entity: LuaEntity): string | null {
+	addResourceEntityToCache(entity: LuaEntity): string | null {
 		if (!entity || !entity.valid || entity.type !== 'resource') {
+			Log.errorAll(`addResourceEntityToCache() => Failed to add entity ${entity.position}`);
 			return null;
 		}
 

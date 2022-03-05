@@ -24,7 +24,7 @@ export function findResourceAt(surface: LuaSurface, position: MapPositionTable) 
 	}
 
 	//there should never be another resource at the exact same coordinates
-	return stuff[1];
+	return stuff[0];
 }
 
 export function findCenter(area: Extend): PositionArray {
@@ -61,4 +61,12 @@ export function getOctantName(vector: PositionArray) {
 	let radians = Math.atan2(vector[1] /* Y */, vector[0] /* X */);
 	let octant = Math.floor((8 * radians) / (2 * Math.PI) + 8.5) % 8;
 	return General.OctantNames[octant];
+}
+
+export function sum(values: number[]): number {
+	let sum = 0;
+	for (const value of values) {
+		sum += value;
+	}
+	return sum;
 }

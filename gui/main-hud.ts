@@ -123,6 +123,6 @@ export function updateHud(playerIndex: number, parent: LuaGuiElement) {
 		let row_flow = row.add({ type: 'flow', name: 'row_flow', direction: 'horizontal', ignored_by_interaction: true });
 
 		row_flow.add({ type: 'label', name: 'cell_resource_site_name', caption: resourceSite.name, style: Styles.CellNameStyle });
-		row_flow.add({ type: 'label', name: 'cell_resource_amount', caption: resourceSite.amount, style: Styles.CellNumericValueStyle });
+		row_flow.add({ type: 'label', name: 'cell_resource_amount', caption: resourceSite.totalAmount, style: Styles.CellNumericValueStyle });
 	}
 }

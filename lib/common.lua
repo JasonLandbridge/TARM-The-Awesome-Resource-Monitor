@@ -12,7 +12,7 @@ function ____exports.findResourceAt(self, surface, position)
     if #stuff < 1 then
         return nil
     end
-    return stuff[2]
+    return stuff[1]
 end
 function ____exports.findCenter(self, area)
     local xPos = (area.left + area.right) / 2
@@ -66,5 +66,12 @@ function ____exports.getOctantName(self, vector)
     local radians = math.atan2(vector[2], vector[1])
     local octant = math.floor(8 * radians / (2 * math.pi) + 8.5) % 8
     return General.OctantNames[octant + 1]
+end
+function ____exports.sum(self, values)
+    local sum = 0
+    for ____, value in ipairs(values) do
+        sum = sum + value
+    end
+    return sum
 end
 return ____exports

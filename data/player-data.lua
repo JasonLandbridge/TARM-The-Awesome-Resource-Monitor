@@ -35,7 +35,7 @@ function ____exports.initPlayer(self, playerIndex)
     end
     ____exports.initForce(nil, player.force)
     if not ____exports.getPlayerData(nil, playerIndex) then
-        __TS__ArrayPush(Global.GlobalData.playerData, {overlays = {}, index = playerIndex, guiUpdateTicks = 60, draftResourceSite = nil})
+        __TS__ArrayPush(Global.GlobalData.playerData, {index = playerIndex, guiUpdateTicks = 60, draftResourceSite = nil})
     end
 end
 function ____exports.initPlayers(self)

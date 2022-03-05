@@ -11,7 +11,7 @@ export function initPlayer(playerIndex: number): void {
 	}
 	initForce(player.force);
 	if (!getPlayerData(playerIndex)) {
-		Global.GlobalData.playerData.push({ overlays: [], index: playerIndex, guiUpdateTicks: 60, draftResourceSite: undefined });
+		Global.GlobalData.playerData.push({ index: playerIndex, guiUpdateTicks: 60, draftResourceSite: undefined });
 	}
 }
 

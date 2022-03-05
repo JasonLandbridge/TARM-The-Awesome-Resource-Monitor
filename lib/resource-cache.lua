@@ -9,6 +9,8 @@ local ____settings_2Ddata = require("data.settings-data")
 local SettingsData = ____settings_2Ddata.default
 local ____global_2Dtemp_2Ddata = require("data.global-temp-data")
 local GlobalTemp = ____global_2Dtemp_2Ddata.default
+local ____log = require("lib.log")
+local Log = ____log.default
 ____exports.ResourceCache = __TS__Class()
 local ResourceCache = ____exports.ResourceCache
 ResourceCache.name = "ResourceCache"
@@ -49,8 +51,9 @@ function ResourceCache.prototype.OnTick(self, event)
     resourceCache.iterationKey = key
     resourceCache.iterationFunction = iterationFunc
 end
-function ResourceCache.prototype.addEntity(self, entity)
+function ResourceCache.prototype.addResourceEntityToCache(self, entity)
     if not entity or not entity.valid or entity.type ~= "resource" then
+        Log:errorAll("addResourceEntityToCache() => Failed to add entity " .. tostring(entity.position))
         return nil
     end
     local positionKey = positionToString(nil, entity.position)

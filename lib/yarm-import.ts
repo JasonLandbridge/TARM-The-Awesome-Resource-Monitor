@@ -8,7 +8,7 @@ import { positionToString } from './common';
 export function importYarmData() {
 	if (remote.interfaces['YARM'] && remote.interfaces['YARM'].get_global_data) {
 		let globalState: YarmGlobalState = remote.call('YARM', 'get_global_data');
-		if (globalState) {
+		if (globalState && Object.keys(globalState).length > 0) {
 			Log.infoAll(`Start of importing YARM data`);
 			let resourceEntities = globalState.ore_tracker.entities;
 			migrateOreTracker(resourceEntities);
@@ -18,7 +18,9 @@ export function importYarmData() {
 			migratePlayerData(globalState.player_data);
 			Log.infoAll(`Imported the player data of YARM`);
 			Log.infoAll(`Successfully imported YARM data`);
+			return;
 		}
+		Log.errorAll('Yarm import failed, YARM global contained no values');
 	}
 }
 
@@ -49,7 +51,7 @@ function migrateForceData(entities: YarmTrackingData[], forceDatum: Record<strin
 
 		for (const [name, yarmResourceSite] of Object.entries(value.ore_sites)) {
 			newForceData[key].resourceSites.push({
-				amount: yarmResourceSite.amount,
+				totalAmount: yarmResourceSite.amount,
 				addedAt: yarmResourceSite.added_at,
 				center: yarmResourceSite.center,
 				entityCount: yarmResourceSite.entity_count,

@@ -5,15 +5,12 @@ import { Entity } from './constants';
 import { setup_gvv } from './lib/debug';
 import Global from './data/global-save-data';
 import { getPlayerData, initPlayer, initPlayers } from './data/player-data';
-import {
-	addResourcesToDraftResourceSite,
-	startResourceSiteCreation,
-	updatePlayers,
-} from './lib/resource-tracker';
+import { updatePlayers } from './lib/resource-tracker';
 import ResourceCache from './lib/resource-cache';
 import GlobalTemp from './data/global-temp-data';
 import SettingsData from './data/settings-data';
 import { importYarmData } from './lib/yarm-import';
+import { addResourcesToDraftResourceSite, startResourceSiteCreation } from './lib/resource-site-creator';
 
 setup_gvv();
 
@@ -73,12 +70,6 @@ script.on_event(defines.events.on_player_selected_area, (event: OnPlayerSelected
 	} else {
 		addResourcesToDraftResourceSite(playerData.index, event.entities);
 	}
-
-	// if (playerData.resourceSiteCreation) {
-	// 	createResourceSite(event.player_index);
-	// } else {
-	// 	clearCurrentSite(event.player_index);
-	// }
 });
 
 script.on_event(defines.events.on_player_created, (event: OnPlayerCreatedEvent) => {

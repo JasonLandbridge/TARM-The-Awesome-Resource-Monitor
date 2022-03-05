@@ -70,3 +70,24 @@ export function sum(values: number[]): number {
 	}
 	return sum;
 }
+
+export function generateGuid() {
+	return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+export function findMajorityResourceEntity(entities: LuaEntity[]): LuaEntity {
+	// Count all occurrences of all resource types
+	let results: Map<string, number> = new Map<string, number>();
+	for (const entity of entities) {
+		if (entity.type === 'resource') {
+			let currentCount = results.get(entity.name) ?? 0;
+			results.set(entity.name, currentCount + 1);
+		}
+	}
+
+	// Determine the most common resource type in the entities
+	let winnerType = [...results.entries()].reduce((a, e) => (e[1] > a[1] ? e : a))[0];
+
+	// Hacky way to hide the possibility of undefined, but we're guaranteed to find something here
+	return entities.find((x) => x.name === winnerType) ?? ({} as LuaEntity);
+}

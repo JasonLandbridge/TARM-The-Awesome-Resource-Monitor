@@ -17,8 +17,6 @@ local getPlayerData = ____player_2Ddata.getPlayerData
 local initPlayer = ____player_2Ddata.initPlayer
 local initPlayers = ____player_2Ddata.initPlayers
 local ____resource_2Dtracker = require("lib.resource-tracker")
-local addResourcesToDraftResourceSite = ____resource_2Dtracker.addResourcesToDraftResourceSite
-local startResourceSiteCreation = ____resource_2Dtracker.startResourceSiteCreation
 local updatePlayers = ____resource_2Dtracker.updatePlayers
 local ____resource_2Dcache = require("lib.resource-cache")
 local ResourceCache = ____resource_2Dcache.default
@@ -28,6 +26,9 @@ local ____settings_2Ddata = require("data.settings-data")
 local SettingsData = ____settings_2Ddata.default
 local ____yarm_2Dimport = require("lib.yarm-import")
 local importYarmData = ____yarm_2Dimport.importYarmData
+local ____resource_2Dsite_2Dcreator = require("lib.resource-site-creator")
+local addResourcesToDraftResourceSite = ____resource_2Dsite_2Dcreator.addResourcesToDraftResourceSite
+local startResourceSiteCreation = ____resource_2Dsite_2Dcreator.startResourceSiteCreation
 setup_gvv(nil)
 script.on_init(function()
     SettingsData:OnInit()

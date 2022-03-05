@@ -3,7 +3,7 @@ import { YarmForceData, YarmGlobalState, YarmPlayerData, YarmTrackingData } from
 import Global from '../data/global-save-data';
 import { ForceData, TrackingData } from '../declarations/global-save-state';
 import { table } from 'util';
-import { positionToString } from './common';
+import { generateGuid, positionToString } from './common';
 
 export function importYarmData() {
 	if (remote.interfaces['YARM'] && remote.interfaces['YARM'].get_global_data) {
@@ -51,6 +51,7 @@ function migrateForceData(entities: YarmTrackingData[], forceDatum: Record<strin
 
 		for (const [name, yarmResourceSite] of Object.entries(value.ore_sites)) {
 			newForceData[key].resourceSites.push({
+				guid: generateGuid(),
 				totalAmount: yarmResourceSite.amount,
 				addedAt: yarmResourceSite.added_at,
 				center: yarmResourceSite.center,

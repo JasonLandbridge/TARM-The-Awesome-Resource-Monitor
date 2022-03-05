@@ -53,13 +53,13 @@ export interface TrackingData {
 }
 
 export interface ResourceSite {
+	guid: string;
 	name: string;
 	totalAmount: number;
 	initialAmount: number;
 	oreType: string;
 	oreName: LocalisedString;
 	orePerMinute: number;
-
 	lastOreCheck: number | undefined;
 	lastModifiedAmount: number | undefined;
 	addedAt: number;

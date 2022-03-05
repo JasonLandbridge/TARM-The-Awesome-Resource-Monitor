@@ -45,9 +45,9 @@ export class ResourceCache implements OnTick {
 	}
 
 	/**
-	 * Add an entity to the resource tracker
-	 * Note: if the tracker already had the entity,
-	 * it will simply return the existing tracker index rather than create a new one.
+	 * Add an entity to the resource cache
+	 * Note: if the resource cache already had the entity,
+	 * it will simply return the existing resource cache index rather than create a new one.
 	 * @param entity
 	 * @return Returns the positionKey
 	 */

@@ -1,4 +1,5 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
 local ____exports = {}
 local ____constants = require("constants.index")
 local General = ____constants.General
@@ -73,5 +74,39 @@ function ____exports.sum(self, values)
         sum = sum + value
     end
     return sum
+end
+function ____exports.generateGuid(self)
+    return __TS__StringSubstring(
+        __TS__NumberToString(
+            math.random(),
+            36
+        ),
+        2,
+        15
+    ) .. __TS__StringSubstring(
+        __TS__NumberToString(
+            math.random(),
+            36
+        ),
+        2,
+        15
+    )
+end
+function ____exports.findMajorityResourceEntity(self, entities)
+    local results = __TS__New(Map)
+    for ____, entity in ipairs(entities) do
+        if entity.type == "resource" then
+            local currentCount = results:get(entity.name) or 0
+            results:set(entity.name, currentCount + 1)
+        end
+    end
+    local winnerType = __TS__ArrayReduce(
+        {__TS__Spread(results:entries())},
+        function(____, a, e) return e[2] > a[2] and e or a end
+    )[1]
+    return __TS__ArrayFind(
+        entities,
+        function(____, x) return x.name == winnerType end
+    ) or ({})
 end
 return ____exports

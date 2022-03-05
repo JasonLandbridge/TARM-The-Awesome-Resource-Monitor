@@ -119,7 +119,7 @@ export function updateHud(playerIndex: number, parent: LuaGuiElement) {
 
 	for (const resourceSite of forceData.resourceSites) {
 		// Create row flow
-		let row = parent.add({ type: 'button', name: resourceSite.name, style: Styles.RowButtonStyle }); // style: (zone == playerdata.zonelist_selected_zone and "zonelist_row_button_selected" or "zonelist_row_button")}
+		let row = parent.add({ type: 'button', name: resourceSite.guid, style: Styles.RowButtonStyle }); // style: (zone == playerdata.zonelist_selected_zone and "zonelist_row_button_selected" or "zonelist_row_button")}
 		let row_flow = row.add({ type: 'flow', name: 'row_flow', direction: 'horizontal', ignored_by_interaction: true });
 
 		row_flow.add({ type: 'label', name: 'cell_resource_site_name', caption: resourceSite.name, style: Styles.CellNameStyle });

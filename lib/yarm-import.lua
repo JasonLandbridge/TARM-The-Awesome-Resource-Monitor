@@ -9,6 +9,7 @@ local Global = ____global_2Dsave_2Ddata.default
 local ____util = require("util")
 local ____table = ____util.table
 local ____common = require("lib.common")
+local generateGuid = ____common.generateGuid
 local positionToString = ____common.positionToString
 function migrateOreTracker(self, entities)
     local newTrackedResources = ____table.deepcopy(Global.trackedResources)
@@ -34,6 +35,7 @@ function migrateForceData(self, entities, forceDatum)
             __TS__ArrayPush(
                 newForceData[key].resourceSites,
                 {
+                    guid = generateGuid(nil),
                     totalAmount = yarmResourceSite.amount,
                     addedAt = yarmResourceSite.added_at,
                     center = yarmResourceSite.center,

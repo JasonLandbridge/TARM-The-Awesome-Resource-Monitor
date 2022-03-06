@@ -20,9 +20,9 @@ __TS__ObjectDefineProperty(
 )
 __TS__ObjectDefineProperty(
     Global,
-    "resourceTracker",
+    "cacheIteration",
     {get = function(self)
-        return global.resourceTracker
+        return global.resourceTracker.cacheIteration
     end}
 )
 __TS__ObjectDefineProperty(
@@ -62,7 +62,6 @@ function Global.OnInit(self)
         global.playerData = {}
     end
     if not global.forceData then
-        global.forceData = {}
         local forces = {
             "player",
             "enemy",
@@ -72,16 +71,16 @@ function Global.OnInit(self)
             "capture",
             "friendly"
         }
-        for ____, force in ipairs(forces) do
-            global.forceData[force] = {resourceSites = {}}
-        end
+        global.forceData = __TS__ArrayMap(
+            forces,
+            function(____, name)
+                return {name = name, resourceSites = {}}
+            end
+        )
     end
     if not global.resourceTracker then
-        global.resourceTracker = {trackedResources = {}}
+        global.resourceTracker = {trackedResources = {}, cacheIteration = {positionKeyIndex = 0, force = "", resourceSiteGuid = ""}}
     end
-end
-function Global.setTrackedResources(self, key, value)
-    global.resourceTracker.trackedResources[key] = value
 end
 function Global.getDraftResourceSite(self, playerIndex)
     local playerData = __TS__ArrayFind(
@@ -92,6 +91,15 @@ function Global.getDraftResourceSite(self, playerIndex)
         return playerData.draftResourceSite
     end
     return nil
+end
+function Global.getForceData(self, forceName)
+    return __TS__ArrayFind(
+        ____exports.default.forceData,
+        function(____, x) return x.name == forceName end
+    ) or nil
+end
+function Global.setTrackedResources(self, key, value)
+    global.resourceTracker.trackedResources[key] = value
 end
 function Global.setDraftResourceSite(self, playerIndex, draftResourceSite)
     local index = __TS__ArrayFindIndex(

@@ -17,7 +17,7 @@ local getPlayerData = ____player_2Ddata.getPlayerData
 local initPlayer = ____player_2Ddata.initPlayer
 local initPlayers = ____player_2Ddata.initPlayers
 local ____resource_2Dtracker = require("lib.resource-tracker")
-local updatePlayers = ____resource_2Dtracker.updatePlayers
+local ResourceTracker = ____resource_2Dtracker.default
 local ____resource_2Dcache = require("lib.resource-cache")
 local ResourceCache = ____resource_2Dcache.default
 local ____global_2Dtemp_2Ddata = require("data.global-temp-data")
@@ -50,7 +50,8 @@ script.on_event(
     Events.OnTick,
     function(event)
         ResourceCache:OnTick(event)
-        updatePlayers(nil, event)
+        ResourceTracker:OnTick(event)
+        ResourceTracker:updatePlayers(event)
     end
 )
 script.on_event(

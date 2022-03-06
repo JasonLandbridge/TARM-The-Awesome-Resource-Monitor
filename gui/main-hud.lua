@@ -1,4 +1,5 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
 local ____exports = {}
 local ____hud = require("constants.hud")
 local HUD = ____hud.default
@@ -67,7 +68,7 @@ function ____exports.updateHud(self, playerIndex, parent)
     if not forceData then
         return
     end
-    for ____, resourceSite in ipairs(forceData.resourceSites) do
+    for ____, resourceSite in __TS__Iterator(forceData.resourceSites) do
         local row = parent.add({type = "button", name = resourceSite.guid, style = Styles.RowButtonStyle})
         local row_flow = row.add({type = "flow", name = "row_flow", direction = "horizontal", ignored_by_interaction = true})
         row_flow.add({type = "label", name = "cell_resource_site_name", caption = resourceSite.name, style = Styles.CellNameStyle})

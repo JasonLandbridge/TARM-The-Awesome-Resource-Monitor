@@ -5,6 +5,7 @@ import {
 	ResourceTracker,
 	DraftResourceSite,
 	TrackingData,
+	CacheIteration,
 } from '../declarations/global-save-state';
 import Log from '../lib/log';
 import { OnLoad } from '../typings/IEvent';
@@ -21,15 +22,15 @@ export default class Global {
 		return global;
 	}
 
-	public static get resourceTracker(): ResourceTracker {
-		return global.resourceTracker;
+	public static get cacheIteration(): CacheIteration {
+		return global.resourceTracker.cacheIteration;
 	}
 
 	public static get trackedResources(): Record<string, TrackingData> {
 		return global.resourceTracker.trackedResources;
 	}
 
-	public static get forceData(): Record<string, ForceData> {
+	public static get forceData(): ForceData[] {
 		return global.forceData;
 	}
 
@@ -55,32 +56,45 @@ export default class Global {
 		}
 
 		if (!global['forceData']) {
-			global['forceData'] = {};
 			let forces = ['player', 'enemy', 'neutral', 'conquest', 'ignore', 'capture', 'friendly'];
-			for (const force of forces) {
-				global.forceData[force] = {
+			global['forceData'] = forces.map((name) => {
+				return {
+					name,
 					resourceSites: [],
 				};
-			}
+			});
 		}
 
 		if (!global['resourceTracker']) {
 			global['resourceTracker'] = {
 				trackedResources: {},
+				cacheIteration: {
+					positionKeyIndex: 0,
+					force: '',
+					resourceSiteGuid: '',
+				},
 			};
 		}
 	}
 
-	public static setTrackedResources(key: string, value: TrackingData) {
-		global.resourceTracker.trackedResources[key] = value;
-	}
-
+	// region Get
 	public static getDraftResourceSite(playerIndex: number): DraftResourceSite | undefined {
 		let playerData = this.playerData.find((x) => x.index === playerIndex);
 		if (playerData) {
 			return playerData.draftResourceSite;
 		}
 		return undefined;
+	}
+
+	public static getForceData(forceName: string): ForceData | undefined {
+		return Global.forceData.find((x) => x.name === forceName) ?? undefined;
+	}
+	// endregion
+
+	// region Set
+
+	public static setTrackedResources(key: string, value: TrackingData) {
+		global.resourceTracker.trackedResources[key] = value;
 	}
 
 	public static setDraftResourceSite(playerIndex: number, draftResourceSite: DraftResourceSite) {
@@ -98,5 +112,16 @@ export default class Global {
 		global.playerData = playerData;
 	}
 
+	/**
+	 * Will add a new ForceData if no same name force exists
+	 * @param forceData
+	 */
+	public static setForceData(forceData: ForceData) {
+		if (!this.getForceData(forceData.name)) {
+			Global.forceData.push(forceData);
+		}
+	}
+
+	// endregion
 	// endregion
 }

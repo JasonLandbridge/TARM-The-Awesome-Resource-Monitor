@@ -6,6 +6,7 @@ export interface GlobalTempState {
 
 export interface ResourceCache {
 	resources: Map<string, TrackingData>;
+	positionKeysSet: Set<string>;
 	iterationKey?: string;
-	iterationFunction?: IterableIterator<[string, TrackingData]>;
+	iterationFunction?: IterableIterator<[string, string]>;
 }

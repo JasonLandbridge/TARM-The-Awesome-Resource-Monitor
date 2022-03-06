@@ -18,11 +18,11 @@ function ResourceCache.prototype.____constructor(self)
 end
 function ResourceCache.prototype.OnTick(self, event)
     local resourceCache = GlobalTemp.resourceCache
-    if not resourceCache or resourceCache.resources.size == 0 then
+    if not resourceCache or resourceCache.positionKeysSet.size == 0 then
         return
     end
     if not resourceCache.iterationFunction then
-        resourceCache.iterationFunction = resourceCache.resources:entries()
+        resourceCache.iterationFunction = resourceCache.positionKeysSet:entries()
     end
     local key = resourceCache.iterationKey
     local iterationFunc = resourceCache.iterationFunction
@@ -30,14 +30,16 @@ function ResourceCache.prototype.OnTick(self, event)
     do
         local i = 0
         while i < entitiesPerTick do
-            local pair = iterationFunc:next().value
-            key = pair[1]
-            local trackingData = pair[2]
             if not key then
-                GlobalTemp.resourceCache.iterationKey = nil
-                GlobalTemp.resourceCache.iterationFunction = nil
-                return
+                local next = iterationFunc:next()
+                if next.done then
+                    GlobalTemp.resourceCache.iterationKey = nil
+                    GlobalTemp.resourceCache.iterationFunction = nil
+                    return
+                end
+                key = next.value[1]
             end
+            local trackingData = Global.trackedResources[key]
             if not trackingData.entity or not trackingData.entity.valid then
                 trackingData.resourceAmount = 0
                 trackingData.entity = nil
@@ -66,14 +68,8 @@ function ResourceCache.prototype.addResourceEntityToCache(self, entity)
         return positionKey
     end
     Global:setTrackedResources(positionKey, {entity = entity, valid = entity.valid, position = entity.position, resourceAmount = entity.amount})
+    GlobalTemp:addPositionKeyToCache(positionKey)
     return positionKey
-end
-function ResourceCache.prototype.hasEntity(self, entity)
-    if not entity or not entity.valid or entity.type ~= "resource" then
-        return false
-    end
-    local positionKey = positionToString(nil, entity.position)
-    return GlobalTemp.resources:has(positionKey)
 end
 function ResourceCache.prototype.getEntity(self, positionKey)
     if positionKey == "" or GlobalTemp.resources.size == 0 then

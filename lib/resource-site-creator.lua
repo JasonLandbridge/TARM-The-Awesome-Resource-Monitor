@@ -123,7 +123,7 @@ function ____exports.startResourceSiteCreation(self, event)
         extents = {left = 0, right = 0, top = 0, bottom = 0},
         initialAmount = 0,
         lastModifiedAmount = nil,
-        lastOreCheck = nil,
+        lastResourceCheckTick = 0,
         name = "",
         trackedPositionKeys = {}
     }
@@ -222,7 +222,7 @@ function ____exports.registerResourceSite(self, playerIndex)
     addResourceSiteToForce(nil, player.force.name, resourceSite)
     if draftResourceSite.isSiteExpanding then
         if draftResourceSite.hasExpanded then
-            resourceSite.lastOreCheck = nil
+            resourceSite.lastResourceCheckTick = 0
             resourceSite.lastModifiedAmount = nil
             Log:info(playerIndex, (("TARM Site expanded - " .. resourceSite.name) .. " - ") .. 0)
         end

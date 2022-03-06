@@ -1,8 +1,8 @@
 import HUD from '../constants/hud';
 import { getPlayer } from '../lib/game';
-import { getForceData } from '../data/force-data';
 import Graphics from '../constants/graphics';
 import Styles from '../constants/styles';
+import Global from '../data/global-save-data';
 
 export function toggleInterface(player: LuaPlayer) {
 	let main_frame = player.gui.screen[HUD.MainFrame] as LuaGuiElement;
@@ -112,7 +112,7 @@ export function updateHud(playerIndex: number, parent: LuaGuiElement) {
 
 	let window = player.gui.screen[HUD.MainFrame];
 
-	let forceData = getForceData(player.force.name);
+	let forceData = Global.getForceData(player.force.name);
 	if (!forceData) {
 		return;
 	}

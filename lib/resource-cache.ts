@@ -7,15 +7,14 @@ import GlobalTemp from '../data/global-temp-data';
 import Log from './log';
 
 export class ResourceCache implements OnTick {
-
 	OnTick(event: OnTickEvent): void {
 		let resourceCache = GlobalTemp.resourceCache;
-		if (!resourceCache || resourceCache.resources.size === 0) {
+		if (!resourceCache || resourceCache.positionKeysSet.size === 0) {
 			return;
 		}
 
 		if (!resourceCache.iterationFunction) {
-			resourceCache.iterationFunction = resourceCache.resources.entries();
+			resourceCache.iterationFunction = resourceCache.positionKeysSet.entries();
 		}
 
 		// Update all trackedEntities with the latest resource amount
@@ -23,14 +22,17 @@ export class ResourceCache implements OnTick {
 		let iterationFunc = resourceCache.iterationFunction;
 		let entitiesPerTick = SettingsData.EntitiesPerTick;
 		for (let i = 0; i < entitiesPerTick; i++) {
-			let pair = iterationFunc.next().value as [key: string, value: TrackingData];
-			key = pair[0];
-			let trackingData = pair[1];
 			if (!key) {
-				GlobalTemp.resourceCache.iterationKey = undefined;
-				GlobalTemp.resourceCache.iterationFunction = undefined;
-				return;
+				let next = iterationFunc.next();
+				if (next.done) {
+					GlobalTemp.resourceCache.iterationKey = undefined;
+					GlobalTemp.resourceCache.iterationFunction = undefined;
+					return;
+				}
+				key = next.value[0];
 			}
+
+			let trackingData = Global.trackedResources[key];
 
 			if (!trackingData.entity || !trackingData.entity.valid) {
 				trackingData.resourceAmount = 0;
@@ -78,15 +80,8 @@ export class ResourceCache implements OnTick {
 			position: entity.position,
 			resourceAmount: entity.amount,
 		});
+		GlobalTemp.addPositionKeyToCache(positionKey);
 		return positionKey;
-	}
-
-	hasEntity(entity: LuaEntity): boolean {
-		if (!entity || !entity.valid || entity.type !== 'resource') {
-			return false;
-		}
-		let positionKey = positionToString(entity.position);
-		return GlobalTemp.resources.has(positionKey);
 	}
 
 	getEntity(positionKey: string): TrackingData | undefined {

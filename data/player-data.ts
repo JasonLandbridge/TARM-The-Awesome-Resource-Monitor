@@ -1,6 +1,5 @@
 import { getPlayer, getPlayers } from '../lib/game';
 import { ForceData, PlayerData } from '../declarations/global-save-state';
-import { getForceData } from './force-data';
 import Log from '../lib/log';
 import Global from './global-save-data';
 
@@ -26,16 +25,16 @@ export function initPlayers() {
  * @param force
  */
 export function initForce(force: LuaForce): ForceData | undefined {
-	let force_data = getForceData(force.name);
-	if (!force_data) {
-		if (!Global.valid) {
-			Log.errorAll('initForce => Could not initForce due to GlobalData being invalid');
-			return undefined;
-		}
-		Global.forceData[force.name] = { resourceSites: [] };
-		return Global.forceData[force.name];
+	if (!Global.valid) {
+		Log.errorAll('initForce => Could not initForce due to Global being invalid');
+		return undefined;
 	}
-	return force_data;
+
+	Global.setForceData({
+		name: force.name,
+		resourceSites: [],
+	});
+	return Global.getForceData(force.name);
 }
 
 export function getPlayerData(playerIndex: number): PlayerData | undefined {

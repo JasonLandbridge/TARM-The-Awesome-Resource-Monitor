@@ -43,14 +43,19 @@ function migrateOreTracker(entities: YarmTrackingData[]) {
 function migrateForceData(entities: YarmTrackingData[], forceDatum: Record<string, YarmForceData>) {
 	let entries = Object.entries(forceDatum);
 
-	let newForceData: Record<string, ForceData> = table.deepcopy(Global.forceData);
+	let newForceData: ForceData[] = [...Global.forceData];
 	for (const [index, [key, value]] of entries.entries()) {
-		if (!newForceData[key]) {
-			newForceData[key] = { resourceSites: [] };
+		let forceIndex = newForceData.findIndex((x) => x.name === key);
+		if (forceIndex === -1) {
+			newForceData.push({
+				name: key,
+				resourceSites: [],
+			});
+			forceIndex = newForceData.length - 1;
 		}
 
 		for (const [name, yarmResourceSite] of Object.entries(value.ore_sites)) {
-			newForceData[key].resourceSites.push({
+			newForceData[forceIndex].resourceSites.push({
 				guid: generateGuid(),
 				totalAmount: yarmResourceSite.amount,
 				addedAt: yarmResourceSite.added_at,
@@ -61,7 +66,7 @@ function migrateForceData(entities: YarmTrackingData[], forceDatum: Record<strin
 				force: yarmResourceSite.force,
 				initialAmount: yarmResourceSite.initial_amount,
 				lastModifiedAmount: yarmResourceSite.last_modified_amount,
-				lastOreCheck: yarmResourceSite.last_ore_check,
+				lastResourceCheckTick: yarmResourceSite.last_ore_check ?? 0,
 				name: yarmResourceSite.name,
 				oreName: yarmResourceSite.ore_name,
 				orePerMinute: yarmResourceSite.ore_per_minute,

@@ -1,6 +1,6 @@
 export interface GlobalSaveState {
 	playerData: PlayerData[];
-	forceData: Record<string, ForceData>;
+	forceData: ForceData[];
 	resourceTracker: ResourceTracker;
 }
 
@@ -37,6 +37,7 @@ export interface DraftResourceSite {
 // region ForceData
 
 export interface ForceData {
+	name: string;
 	resourceSites: ResourceSite[];
 }
 
@@ -44,8 +45,10 @@ export interface ForceData {
 export interface ResourceTracker {
 	/**
 	 * Needs to be this format otherwise it won't be saved and loaded correctly
+	 * OnLoad also doesn't allow for loading/saving Map<string, TrackingData> as global is read-only in OnLoad
 	 */
 	trackedResources: { [name: string]: TrackingData };
+	cacheIteration: CacheIteration;
 }
 
 export interface TrackingData {
@@ -63,7 +66,7 @@ export interface ResourceSite {
 	oreType: string;
 	oreName: LocalisedString;
 	orePerMinute: number;
-	lastOreCheck: number | undefined;
+	lastResourceCheckTick: number;
 	lastModifiedAmount: number | undefined;
 	addedAt: number;
 	surface: LuaSurface;
@@ -88,7 +91,8 @@ export interface Extend {
 	bottom: number;
 }
 
-export interface Iteration {
-	running: boolean;
-	state: boolean[];
+export interface CacheIteration {
+	force: string;
+	resourceSiteGuid: string;
+	positionKeyIndex: number;
 }

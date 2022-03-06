@@ -23,18 +23,24 @@ __TS__ObjectDefineProperty(
     end}
 )
 function GlobalTemp.OnInit(self)
-    globalTempData = {resourceCache = {resources = __TS__New(Map)}}
+    globalTempData = {resourceCache = {
+        resources = __TS__New(Map),
+        positionKeysSet = __TS__New(Set)
+    }}
 end
 function GlobalTemp.OnLoad(self)
     self:OnInit()
-    local entries = __TS__ObjectEntries(Global.trackedResources)
-    if #entries == 0 then
+    local keys = __TS__ObjectKeys(Global.trackedResources)
+    if #keys == 0 then
         return
     end
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        local trackingData = ____value[2]
-        globalTempData.resourceCache.resources:set(key, trackingData)
+    for ____, key in ipairs(keys) do
+        globalTempData.resourceCache.positionKeysSet:add(key)
+    end
+end
+function GlobalTemp.addPositionKeyToCache(self, key)
+    if not globalTempData.resourceCache.positionKeysSet:has(key) then
+        globalTempData.resourceCache.positionKeysSet:add(key)
     end
 end
 ____exports.default = GlobalTemp

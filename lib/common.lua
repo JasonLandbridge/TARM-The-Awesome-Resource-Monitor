@@ -68,13 +68,6 @@ function ____exports.getOctantName(self, vector)
     local octant = math.floor(8 * radians / (2 * math.pi) + 8.5) % 8
     return General.OctantNames[octant + 1]
 end
-function ____exports.sum(self, values)
-    local sum = 0
-    for ____, value in ipairs(values) do
-        sum = sum + value
-    end
-    return sum
-end
 function ____exports.generateGuid(self)
     return __TS__StringSubstring(
         __TS__NumberToString(

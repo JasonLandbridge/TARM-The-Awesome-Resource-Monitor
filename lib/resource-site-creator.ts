@@ -2,14 +2,13 @@ import { getPlayer } from './game';
 import { getPlayerData } from '../data/player-data';
 import Global from '../data/global-save-data';
 import Log from './log';
-import { addResourceSiteToForce, getForceData } from '../data/force-data';
+import { addResourceSiteToForce } from '../data/force-data';
 import { findCenter, findMajorityResourceEntity, findResourceAt, generateGuid, getOctantName, shiftPosition } from './common';
 import SettingsData from '../data/settings-data';
 import { distance } from 'util';
 import { DraftResourceSite, ResourceSite } from '../declarations/global-save-state';
 import { Entity, General } from '../constants';
 import ResourceCache from './resource-cache';
-import GlobalTemp from '../data/global-temp-data';
 
 export function startResourceSiteCreation(event: OnPlayerSelectedAreaEvent) {
 	let playerIndex = event.player_index;
@@ -45,7 +44,7 @@ export function startResourceSiteCreation(event: OnPlayerSelectedAreaEvent) {
 		},
 		initialAmount: 0,
 		lastModifiedAmount: undefined,
-		lastOreCheck: undefined,
+		lastResourceCheckTick: 0,
 		name: '',
 		trackedPositionKeys: {},
 	};
@@ -141,7 +140,7 @@ export function registerResourceSite(playerIndex: number) {
 		Log.error(playerIndex, `registerResourceSite() => Could not retrieve the draftResourceSite for registration.`);
 		return;
 	}
-	let forceData = getForceData(player.force.name);
+	let forceData = Global.getForceData(player.force.name);
 	let resourceSite = draftResourceSite.resourceSite;
 	resourceSite.addedAt = game.tick;
 
@@ -154,7 +153,7 @@ export function registerResourceSite(playerIndex: number) {
 
 	if (draftResourceSite.isSiteExpanding) {
 		if (draftResourceSite.hasExpanded) {
-			resourceSite.lastOreCheck = undefined;
+			resourceSite.lastResourceCheckTick = 0;
 			resourceSite.lastModifiedAmount = undefined;
 			//TODO let amountAdded = resourceSite.amount - (resourceSite.initialAmount ?? 0);
 			Log.info(playerIndex, `TARM Site expanded - ${resourceSite.name} - ${0}`);

@@ -18,6 +18,7 @@ export default class GlobalTemp {
 		globalTempData = {
 			resourceCache: {
 				resources: new Map<string, TrackingData>(),
+				positionKeysSet: new Set<string>(),
 			},
 		};
 	}
@@ -26,15 +27,21 @@ export default class GlobalTemp {
 		// Ensure that _G has the correct properties set, these are not loaded from a save game
 		this.OnInit();
 
-		let entries = Object.entries(Global.trackedResources);
-		if (entries.length === 0) {
+		let keys = Object.keys(Global.trackedResources);
+		if (keys.length === 0) {
 			return;
 		}
 
 		// Factorio saves the trackedResources as json,
 		// which need to be converted to a valid Map<string, TrackingData> on load
-		for (const [key, trackingData] of entries) {
-			globalTempData.resourceCache.resources.set(key, trackingData);
+		for (const key of keys) {
+			globalTempData.resourceCache.positionKeysSet.add(key);
+		}
+	}
+
+	public static addPositionKeyToCache(key: string) {
+		if (!globalTempData.resourceCache.positionKeysSet.has(key)) {
+			globalTempData.resourceCache.positionKeysSet.add(key);
 		}
 	}
 	// endregion

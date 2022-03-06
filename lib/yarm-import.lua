@@ -45,7 +45,7 @@ function migrateForceData(self, entities, forceDatum)
                     force = yarmResourceSite.force,
                     initialAmount = yarmResourceSite.initial_amount,
                     lastModifiedAmount = yarmResourceSite.last_modified_amount,
-                    lastOreCheck = yarmResourceSite.last_ore_check,
+                    lastResourceCheckTick = yarmResourceSite.last_ore_check or 0,
                     name = yarmResourceSite.name,
                     oreName = yarmResourceSite.ore_name,
                     orePerMinute = yarmResourceSite.ore_per_minute,

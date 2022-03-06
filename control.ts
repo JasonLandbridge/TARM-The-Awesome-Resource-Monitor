@@ -5,7 +5,7 @@ import { Entity } from './constants';
 import { setup_gvv } from './lib/debug';
 import Global from './data/global-save-data';
 import { getPlayerData, initPlayer, initPlayers } from './data/player-data';
-import { updatePlayers } from './lib/resource-tracker';
+import ResourceTracker from './lib/resource-tracker';
 import ResourceCache from './lib/resource-cache';
 import GlobalTemp from './data/global-temp-data';
 import SettingsData from './data/settings-data';
@@ -35,7 +35,8 @@ script.on_load(() => {
 
 script.on_event(Events.OnTick, (event: OnTickEvent) => {
 	ResourceCache.OnTick(event);
-	updatePlayers(event);
+	ResourceTracker.OnTick(event)
+	ResourceTracker.updatePlayers(event);
 });
 
 script.on_event(defines.events.on_gui_closed, (event: OnGuiClosedEvent) => {

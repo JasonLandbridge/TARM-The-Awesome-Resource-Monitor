@@ -23,10 +23,7 @@ __TS__ObjectDefineProperty(
     end}
 )
 function GlobalTemp.OnInit(self)
-    globalTempData = {
-        test = true,
-        resourceCache = {resources = __TS__New(Map)}
-    }
+    globalTempData = {resourceCache = {resources = __TS__New(Map)}}
 end
 function GlobalTemp.OnLoad(self)
     self:OnInit()

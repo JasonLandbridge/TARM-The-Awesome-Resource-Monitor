@@ -42,6 +42,9 @@ export interface ForceData {
 
 // endregion
 export interface ResourceTracker {
+	/**
+	 * Needs to be this format otherwise it won't be saved and loaded correctly
+	 */
 	trackedResources: { [name: string]: TrackingData };
 }
 

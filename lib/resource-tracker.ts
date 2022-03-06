@@ -4,6 +4,14 @@ import { getPlayerData, initPlayer } from '../data/player-data';
 import Global from '../data/global-save-data';
 import { clearDraftResourceSite, finalizeResourceSite, registerResourceSite, scanResourceSite } from './resource-site-creator';
 
+export function updateResourceAmounts() {
+
+
+
+
+}
+
+
 export function updatePlayers(event: EventData) {
 	if (!Global.valid || !Global.playerData) {
 		Log.warnAll(`updatePlayers() => Either Global or Global.playerData was invalid`);

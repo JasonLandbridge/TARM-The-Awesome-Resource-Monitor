@@ -7,6 +7,7 @@ import {
 	TrackingData,
 } from '../declarations/global-save-state';
 import Log from '../lib/log';
+import { OnLoad } from '../typings/IEvent';
 
 declare var global: GlobalSaveState;
 
@@ -76,7 +77,7 @@ export default class Global {
 
 	public static getDraftResourceSite(playerIndex: number): DraftResourceSite | undefined {
 		let playerData = this.playerData.find((x) => x.index === playerIndex);
-		if (playerData){
+		if (playerData) {
 			return playerData.draftResourceSite;
 		}
 		return undefined;

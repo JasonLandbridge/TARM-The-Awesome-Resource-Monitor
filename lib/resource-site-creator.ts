@@ -9,6 +9,7 @@ import { distance } from 'util';
 import { DraftResourceSite, ResourceSite } from '../declarations/global-save-state';
 import { Entity, General } from '../constants';
 import ResourceCache from './resource-cache';
+import GlobalTemp from '../data/global-temp-data';
 
 export function startResourceSiteCreation(event: OnPlayerSelectedAreaEvent) {
 	let playerIndex = event.player_index;

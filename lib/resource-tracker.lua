@@ -18,6 +18,8 @@ function ____exports.updateUi(self, playerIndex)
 end
 function ____exports.processOverlayForExistingResourceSite(self, index)
 end
+function ____exports.updateResourceAmounts(self)
+end
 function ____exports.updatePlayers(self, event)
     if not Global.valid or not Global.playerData then
         Log:warnAll("updatePlayers() => Either Global or Global.playerData was invalid")

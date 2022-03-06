@@ -16,7 +16,6 @@ export default class GlobalTemp {
 	// region Methods
 	public static OnInit() {
 		globalTempData = {
-			test: true,
 			resourceCache: {
 				resources: new Map<string, TrackingData>(),
 			},

@@ -1,7 +1,6 @@
 import { TrackingData } from './global-save-state';
 
 export interface GlobalTempState {
-	test: boolean;
 	resourceCache: ResourceCache;
 }
 
